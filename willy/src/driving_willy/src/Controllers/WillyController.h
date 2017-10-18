@@ -64,13 +64,22 @@ class WillyController
 		bool CanTurnLeft;
 		bool CanTurnRight;
 
+		//Array where the pointers in the array are where he reads the depth
+		int ReadPointsInImage[10][2];
+
 		//Array with data of sonars. 
 		Sonar SonarData[10];
 
-		//The checks of sonars readed from config file
+		int ChecksTurnLeftElements; 
 		SonarCheck ChecksTurnLeft[5];
+
+		int ChecksTurnRightElements; 
 		SonarCheck ChecksTurnRight[5];
+
+		int ChecksDriveForwardElements; 
 		SonarCheck ChecksDriveForward[5];
+
+		int ChecksDriveBackwardElements; 
 		SonarCheck ChecksDriveBackward[5];
 	private: 
 
