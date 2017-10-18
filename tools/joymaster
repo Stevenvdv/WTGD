@@ -1,0 +1,20 @@
+#!/bin/bash 
+if [ -e /dev/ttyACM0 ]
+	then
+	sudo chmod 666 /dev/ttyACM0
+	if [ -e /dev/input/$1 ]
+		then
+			sudo chmod a+rw /dev/input/$1
+			gnome-terminal -e "bash -c \"./roscore; exec bash\""
+			sleep 2
+			gnome-terminal -e "bash -c \"./python; exec bash\"" 
+			sleep 2
+			gnome-terminal -e "bash -c \"./joystick; exec bash\"" 
+		else
+			echo "Joystick not connected"
+			exit
+	fi
+else
+	echo "Arduino not connected or not added to virtual machine"
+	exit
+fi

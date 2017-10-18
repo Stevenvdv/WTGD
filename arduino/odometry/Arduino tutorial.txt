@@ -1,0 +1,6 @@
+1. Install package
+	sudo apt-get install arduino
+2. Download libraries from bitbucket
+	git clone http://bitbucket.com/willytherobot/willy
+3. Run copy command in terminal
+	sudo cp -rf ~/Willy the garbage disposal robot/willy/Arduino/Willy/Arduino Libraries /usr/share/arduino

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Willy>
+	<SonarChecks>
+		<Sonar type="TurnLeft" SonarID="3" Value="40">
+		<Sonar type="TurnLeft" SonarID="4" Value="60">
+		<Sonar type="TurnLeft" SonarID="5" Value="40">
+		<Sonar type="TurnLeft" SonarID="0" Value="100">
+		<Sonar type="TurnLeft" SonarID="9" Value="100">
+
+		<Sonar type="TurnRight" SonarID="0" Value="60">
+		<Sonar type="TurnRight" SonarID="1" Value="40">
+		<Sonar type="TurnRight" SonarID="9" Value="60">
+		<Sonar type="TurnRight" SonarID="4" Value="100">
+		<Sonar type="TurnRight" SonarID="5" Value="100">
+
+		<Sonar type="DriveForward" SonarID="6" Value="120">
+		<Sonar type="DriveForward" SonarID="7" Value="120">
+		<Sonar type="DriveForward" SonarID="8" Value="120">
+
+		<Sonar type="DriveBackward" SonarID="1" Value="90">
+		<Sonar type="DriveBackward" SonarID="2" Value="120">
+		<Sonar type="DriveBackward" SonarID="3" Value="90">
+	</SonarChecks>
+</Willy>

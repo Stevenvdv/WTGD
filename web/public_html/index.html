@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css">
+
+	<title>Test</title>
+</head>
+<body>
+    <div class="container">
+
+        <div class="page-header">
+            <img src="Images/Willy.PNG" style="width: 50px; float: left; margin-right: 20px;"></img>
+            <h1>Willy Control Center</h1>
+            <p class="lead">Application for changing config for Willy... And more....</p>
+        </div>
+
+      <h3>Real time sonar information</h3>
+      <div class="row">
+        <div class="col-md-6">
+            <h3>Sonar Values</h3>
+            <table class="table" id="tblRealTimeSonar">
+                <tr>
+                    <td>
+                        <label id="lblSonar8">8</label>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(315deg);"></span>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        <label id="lblSonar7">7</label>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(45deg);"></span>
+                        <label id="lblSonar6">6</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblSonar9">9</label>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <label id="lblSonar5">5</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblSonar0">0</label>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <label id="lblSonar4">4</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblSonar1">1</label>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(225deg);"></span>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        <label id="lblSonar2">2</label>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(135deg);"></span>
+                        <label id="lblSonar3">3</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>Control speed</h3>
+            
+            Forward
+            <input id="sliderSpeedForward" class="slider" type="text" data-slider-min="0" data-slider-max="2" data-slider-step="0.05" data-slider-value="0.5" data-slider-orientation="vertical"/>
+            
+            Backward
+            <input id="sliderSpeedBackward" class="slider" type="text" data-slider-min="-2" data-slider-max="0" data-slider-step="-0.05" data-slider-value="-0.5" data-slider-orientation="vertical"/>
+            
+            Turn left
+            <input id="sliderSpeedLeft" class="slider" type="text" data-slider-min="0" data-slider-max="2" data-slider-step="0.05" data-slider-value="0.5" data-slider-orientation="vertical"/>
+            
+            Turn right
+            <input id="sliderSpeedRight" class="slider" type="text" data-slider-min="-2" data-slider-max="0" data-slider-step="-0.05" data-slider-value="-0.5" data-slider-orientation="vertical"/>
+        
+        </div>
+    </div>
+      <h3>Sonar values</h3>
+      <p>Change the surroundings for the turning values</p>
+      <div class="row">
+        <div class="col-md-6">
+            <h3>DriveForward</h3>
+            <table class="table">
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(315deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar8" data-type="DriveForward" data-SonarID="8"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span><br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar7" data-type="DriveForward" data-SonarID="7"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(45deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar6" data-type="DriveForward" data-SonarID="6"></input>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar9" data-type="DriveForward" data-SonarID="9"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar5" data-type="DriveForward" data-SonarID="5"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar0" data-type="DriveForward" data-SonarID="0"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar4" data-type="DriveForward" data-SonarID="4"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar1" data-type="DriveForward" data-SonarID="1"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(225deg);"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar2" data-type="DriveForward" data-SonarID="2"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveForwardSonar3" data-type="DriveForward" data-SonarID="3"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(135deg);"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <h3>DriveBackward</h3>
+            <table class="table">
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(315deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar8" data-type="DriveBackward" data-SonarID="8"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span><br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar7" data-type="DriveBackward" data-SonarID="7"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(45deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar6" data-type="DriveBackward" data-SonarID="6"></input>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar9" data-type="DriveBackward" data-SonarID="9"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar5" data-type="DriveBackward" data-SonarID="5"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar0" data-type="DriveBackward" data-SonarID="0"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar4" data-type="DriveBackward" data-SonarID="4"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar1" data-type="DriveBackward" data-SonarID="1"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(225deg);"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar2" data-type="DriveBackward" data-SonarID="2"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbDriveBackwardSonar3" data-type="DriveBackward" data-SonarID="3"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(135deg);"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <h3>TurnRight</h3>
+            <table class="table">
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(315deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar8" data-type="TurnRight" data-SonarID="8"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span><br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar7" data-type="TurnRight" data-SonarID="7"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(45deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar6" data-type="TurnRight" data-SonarID="6"></input>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar9" data-type="TurnRight" data-SonarID="9"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar5" data-type="TurnRight" data-SonarID="5"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar0" data-type="TurnRight" data-SonarID="0"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar4" data-type="TurnRight" data-SonarID="4"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar1" data-type="TurnRight" data-SonarID="1"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(225deg);"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar2" data-type="TurnRight" data-SonarID="2"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnRightSonar3" data-type="TurnRight" data-SonarID="3"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(135deg);"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <h3>TurnLeft</h3>
+            <table class="table">
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(315deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar8" data-type="TurnLeft" data-SonarID="8"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span><br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar7" data-type="TurnLeft" data-SonarID="7"></input>
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(45deg);"></span> <br/>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar6" data-type="TurnLeft" data-SonarID="6"></input>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar9" data-type="TurnLeft" data-SonarID="9"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar5" data-type="TurnLeft" data-SonarID="5"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar0" data-type="TurnLeft" data-SonarID="0"></input>
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar4" data-type="TurnLeft" data-SonarID="4"></input>
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </td>
+                </tr>
+                <tr> <td colspan="3"> </td> </tr>
+                <tr>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar1" data-type="TurnLeft" data-SonarID="1"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(225deg);"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar2" data-type="TurnLeft" data-SonarID="2"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="input-small SonarTextbox" style="width:50px;" id="tbTurnLeftSonar3" data-type="TurnLeft" data-SonarID="3"></input> <br/>
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true" style="-webkit-transform: rotate(135deg);"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <button class="btn btn-success" id="btnSave">Opslaan</button>
+        </div>
+      </div>
+    </div>
+</body>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/bootstrap-slider/dist/bootstrap-slider.min.js"></script>
+
+<script src="includes/eventemitter/eventemitter.min.js"></script>
+<script src="includes/roslib/roslib.min.js"></script>
+
+<script type="text/javascript" type="text/javascript">
+    var ros = new ROSLIB.Ros({
+        url : 'ws://ubuntu:10500'
+    });
+
+    ros.on('connection', function() {
+        console.log('Connected to websocket server.');
+    });
+
+    ros.on('error', function(error) {
+        console.log('Error connecting to websocket server: ', error);
+    });
+
+    ros.on('close', function() {
+        console.log('Connection to websocket server closed.');
+    });
+
+    var twistForward = new ROSLIB.Message( { linear : { x : 0.5, y : 0, z : 0 }, angular : { x : 0, y : 0, z : 0 } } );
+    var twistBackward = new ROSLIB.Message( { linear : { x : -0.5, y : 0, z : 0 }, angular : { x : 0, y : 0, z : 0 } } );
+
+    var twistLeft = new ROSLIB.Message( { linear : { x : 0, y : 0, z : 0 }, angular : { x : 0, y : 0, z : 0.25 } } );
+    var twistRight = new ROSLIB.Message( { linear : { x : 0, y : 0, z : 0 }, angular : { x : 0, y : 0, z : -0.25 } } );
+
+    var twistStop = new ROSLIB.Message( { linear : { x : 0, y : 0, z : 0 }, angular : { x : 0, y : 0, z : 0 } } );
+
+    $(document).ready(function() {
+        $.get( "http://localhost:3000/getWillyConfig", function( data ) {
+            var Sonars = data.Willy.SonarChecks[0].Sonar;
+
+            for (var i = Sonars.length - 1; i >= 0; i--) {
+                $("#tb" + Sonars[i].$.type + "Sonar" + Sonars[i].$.SonarID).val(Sonars[i].$.Value);
+            }
+        });
+
+        $("#btnSave").click(function(){
+            var Sonars = new Array();
+            $(".SonarTextbox").each(function(key, value) {
+                var elm = $(value);
+                var data = {
+                    Type: $(value).data("type"), 
+                    SonarID: $(value).data("sonarid"),
+                    Value: $(value).val()
+                };
+
+                Sonars.push(data);
+            });
+
+            $.post( "http://localhost:3000/setWillyConfig", {Sonars: Sonars}, function( data ) {
+                alert("Opslaan succesvol");
+            });
+        });
+
+
+        // With JQuery
+        $(".slider").slider({
+            reversed : true
+        });
+
+        $(".slider").on("change", function(elm) {
+            twistForward.linear.x = parseFloat($("#sliderSpeedForward").val());
+            twistBackward.linear.x = parseFloat($("#sliderSpeedBackward").val());
+            twistLeft.angular.z = parseFloat($("#sliderSpeedLeft").val());
+            twistRight.angular.z = parseFloat($("#sliderSpeedRight").val());
+        });
+
+        $(document).on('keypress', function(ev) {
+            switch(ev.keyCode) {
+                case 119:
+                cmdVel.publish(twistForward);
+                    break;
+
+                case 97:
+                cmdVel.publish(twistBackward);
+                    break;
+
+                case 115:
+                cmdVel.publish(twistLeft);
+                    break;
+
+                case 100:
+                cmdVel.publish(twistRight);
+                    break;
+
+                default:
+                cmdVel.publish(twistStop);
+                    break;
+            }
+        });
+    });
+
+    var cmdVel = new ROSLIB.Topic({
+        ros : ros,
+        name : '/cmd_vel',
+        messageType : 'geometry_msgs/Twist'
+    });
+
+    var sonarListener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/sonar',
+        messageType : 'sensor_msgs/LaserEcho'
+    });
+
+    sonarListener.subscribe(function(message) {
+        for (var i = message.echoes.length - 1; i >= 0; i--) {
+            $("#lblSonar" + i).text(message.echoes[i]);
+            $("#lblSonar" + i).parent().css("background-color", getColor((message.echoes[i] / 2.5)));
+
+            console.log(getColor((message.echoes[i] / 2.5)));
+        }
+    });
+
+    var sonarPossibleMovings = new ROSLIB.Topic({
+        ros : ros,
+        name : '/possible_directions',
+        messageType : 'std_msgs/Int32MultiArray'
+    });
+
+    sonarPossibleMovings.subscribe(function(message) {
+        if(message.data[0] == 1) {
+            $("#tblRealTimeSonar").css("border-top","5px solid #5cb85c");
+        } else {
+           $("#tblRealTimeSonar").css("border-top","5px solid #d9534f");
+        }   
+        if(message.data[1] == 1) {
+            $("#tblRealTimeSonar").css("border-left","5px solid #5cb85c");
+        } else {
+            $("#tblRealTimeSonar").css("border-left","5px solid #d9534f");        
+        }
+
+        if(message.data[2] == 1) {
+            $("#tblRealTimeSonar").css("border-bottom","5px solid #5cb85c");
+        } else {
+            $("#tblRealTimeSonar").css("border-bottom","5px solid #d9534f");        
+        }
+
+        if(message.data[3] == 1) {
+            $("#tblRealTimeSonar").css("border-right","5px solid #5cb85c");
+        } else {
+            $("#tblRealTimeSonar").css("border-right","5px solid #d9534f");        
+        }
+    });
+
+    var percentColors = [{ pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
+                            { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
+                            { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } } ];
+
+    var getColorForPercentage = function(pct) {
+        for (var i = 1; i < percentColors.length - 1; i++) {
+            if (pct < percentColors[i].pct) {
+                break;
+            }
+        }
+        var lower = percentColors[i - 1];
+        var upper = percentColors[i];
+        var range = upper.pct - lower.pct;
+        var rangePct = (pct - lower.pct) / range;
+        var pctLower = 1 - rangePct;
+        var pctUpper = rangePct;
+        var color = {
+            r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+            g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+        };
+        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        // or output as hex if preferred
+    } 
+
+    function getColor(value){
+        var R = (255 * value) / 100;
+        var G = (255 * (100 - value)) / 100 ;
+        var B = 0;
+
+        return 'rgb(' + [parseInt(G), parseInt(R), parseInt(B)].join(',') + ')';
+    } 
+
+</script>
+</html>

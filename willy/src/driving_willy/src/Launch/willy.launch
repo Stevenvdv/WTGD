@@ -1,0 +1,21 @@
+<launch>
+ 	<!-- Start's up the arduino's -->
+	
+  <include file="$(find rosserial_server)/launch/serial.launch"/>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+     <arg name="port" value="10500"/>
+  </include>
+	<!-- Starts up the Kinect -->
+	<arg name="Kinect" value="0"/>
+
+	<group if="$(arg Kinect)">
+  	<include file="$(find openni_launch)/launch/openni.launch">
+    		<arg name="camera" value="openni"/>
+  	</include>
+	</group>
+
+  	<!-- Start's up the autonomously driving project 
+	<node name="willy" pkg="driving_willy" type="main" args="" output="screen" />-->
+
+</launch>
