@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -11,33 +12,18 @@ namespace Willy.Core
 {
     public class RosClient : IDisposable
     {
+        private readonly Dictionary<string, RosServiceCall> _callQueue;
         private string _messageBuffer;
 
         public RosClient()
         {
             WebSocket = new ClientWebSocket();
-            ServiceQueue = new Dictionary<string, RosServiceCall>();
 
+            _callQueue = new Dictionary<string, RosServiceCall>();
             _messageBuffer = string.Empty;
 
             RosMessage += OnRosMessage;
         }
-
-        private void OnRosMessage(object sender, RosMessageEventArgs rosMessageEventArgs)
-        {
-            if (ServiceQueue.ContainsKey(rosMessageEventArgs.Id))
-            {
-                var queuedService = ServiceQueue[rosMessageEventArgs.Id];
-                queuedService.Response = new RosServiceResponse
-                {
-                    Name = queuedService.Name,
-                    Values = new List<object> {rosMessageEventArgs.Values}
-                };
-                ServiceQueue.Remove(rosMessageEventArgs.Id);
-            }
-        }
-
-        public Dictionary<string, RosServiceCall> ServiceQueue { get; set; }
 
         public ClientWebSocket WebSocket { get; }
 
@@ -46,12 +32,33 @@ namespace Willy.Core
             WebSocket?.Dispose();
         }
 
+        private void OnRosMessage(object sender, RosMessageEventArgs rosMessageEventArgs)
+        {
+            if (rosMessageEventArgs.Id != null && _callQueue.ContainsKey(rosMessageEventArgs.Id))
+            {
+                var queuedService = _callQueue[rosMessageEventArgs.Id];
+                queuedService.SetResponse(queuedService.Name, rosMessageEventArgs);
+
+                _callQueue.Remove(rosMessageEventArgs.Id);
+            }
+        }
+
+        public async Task ConnectAsync()
+        {
+            await WebSocket.ConnectAsync(new Uri("ws://192.168.0.100:9090"), CancellationToken.None);
+
+            // I don't care, the receive task has to run in the background anyway
+#pragma warning disable 4014
+            Task.Run(ReceiveTask);
+#pragma warning restore 4014
+        }
+
         public async Task ReceiveTask()
         {
             while (WebSocket.State == WebSocketState.Open)
             {
                 var bytes = new ArraySegment<byte>(new byte[4096]);
-                
+
                 var result = await WebSocket.ReceiveAsync(bytes, CancellationToken.None);
                 _messageBuffer += Encoding.Default.GetString(bytes.ToArray());
 
@@ -64,26 +71,45 @@ namespace Willy.Core
             }
         }
 
-        public async Task<RosServiceResponse> CallService(RosServiceCall service)
+        public async Task<RosServiceResponse> CallServiceAsync(RosServiceCall service)
         {
             // Put the service into the queue
             var guid = Guid.NewGuid().ToString();
-            ServiceQueue.Add(guid, service);
+            _callQueue.Add(guid, service);
 
             // Send the request
             await WebSocket.SendAsync(service.Serialize(guid), WebSocketMessageType.Text, true, CancellationToken.None);
 
             // Wait for the response to be filled in
+            var timeout = 0;
             while (service.Response == null)
+            {
+                timeout += 10;
                 await Task.Delay(10);
+                if (timeout >= 3000)
+                    return null;
+            }
 
-            return service.Response;
+            return (RosServiceResponse) service.Response;
         }
 
-        public async Task ConnectAsync()
+        public async Task SetParamValueAsync(string paramName, object param)
         {
-            await WebSocket.ConnectAsync(new Uri("ws://192.168.0.100:9090"), CancellationToken.None);
-            Task.Run(ReceiveTask);
+            var service = new RosServiceCall("/rosapi/set_param")
+            {
+                Arguments = new Dictionary<string, object> {{"name", paramName}, {"value", "\"" + param + "\""}}
+            };
+            await CallServiceAsync(service);
+        }
+
+        public async Task<object> GetParamValueAsync(string paramName)
+        {
+            var service = new RosServiceCall("/rosapi/get_param")
+            {
+                Arguments = new Dictionary<string, object> {{"name", paramName}}
+            };
+            var result = await CallServiceAsync(service);
+            return result.TryGetValuesAsDictionary().FirstOrDefault().Value;
         }
 
         protected virtual void OnRosMessage(RosMessageEventArgs e)

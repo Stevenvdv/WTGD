@@ -12,20 +12,18 @@ namespace Willy.Core.Events
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("result")]
-        public bool Result { get; set; }
-
-        [JsonProperty("values")]
-        public JToken Values { get; set; }
+        public JToken Json { get; set; }
 
         public static RosMessageEventArgs FromJson(string json)
         {
-            return JsonConvert.DeserializeObject<RosMessageEventArgs>(json);
+            var res = JsonConvert.DeserializeObject<RosMessageEventArgs>(json);
+            res.Json = JToken.Parse(json);
+            return res;
         }
 
         public override string ToString()
         {
-            return $"{nameof(Op)}: {Op}, {nameof(Id)}: {Id}, {nameof(Result)}: {Result}, {nameof(Values)}: {Values}";
+            return $"{nameof(Op)}: {Op}, {nameof(Id)}: {Id}";
         }
     }
 }

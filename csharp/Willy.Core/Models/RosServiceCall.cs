@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Willy.Core.Events;
 
 namespace Willy.Core.Models
 {
@@ -17,7 +18,7 @@ namespace Willy.Core.Models
         public string Name { get; set; }
 
         [JsonProperty(PropertyName = "args")]
-        public List<object> Arguments { get; set; }
+        public Dictionary<string, object> Arguments { get; set; }
 
         [JsonIgnore]
         public RosServiceResponse Response { get; set; }
@@ -30,7 +31,13 @@ namespace Willy.Core.Models
             jToken["id"] = id;
 
             // Convert the JSON to a byte array
-            return Encoding.UTF8.GetBytes(jToken.ToString());
+            var json = jToken.ToString();
+            return Encoding.UTF8.GetBytes(json);
+        }
+
+        public void SetResponse(string name, RosMessageEventArgs objects)
+        {
+            Response = new RosServiceResponse {Name = name, Values = objects.Json["values"]};
         }
     }
 }
