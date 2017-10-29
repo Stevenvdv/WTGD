@@ -1,0 +1,79 @@
+body {
+  padding-top: 60px;
+}
+
+.navbar-icon {
+  float: left;
+  height: 34px;
+  margin-top: -6px;
+  margin-right: 8px;
+}
+
+.navbar-chevron {
+  font-size: 0.5em;
+  position: relative;
+  top: -2px;
+}
+
+.navbar-search-form {
+  margin-top: 13px;
+}
+
+.navbar-search-form > .form-control {
+  width:200px;
+}
+
+.navbar-character-avatar {
+  border-radius: 50%;
+  height: 38px;
+  margin-top: -8px;
+  margin-right: 10px;
+  float: left;
+  box-shadow: 0 0 6px 0 #000000;
+  background-size: contain;
+}
+
+.navbar-character-avatar img {
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+
+.navbar-search-popup-wrapper {
+  z-index: 9999;
+  width: 300px;
+}
+
+.navbar-search-popup-wrapper > .message {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  color: #868686;
+}
+
+.navbar-search-result {
+  simple-character {
+    width: 100%;
+    height: 48px;
+    margin: 4px -12px;
+    display: block;
+    line-height: 1.0;
+  }
+
+  simple-character .character-avatar {
+    width: 48px;
+  }
+
+  simple-character .character-header h3 {
+    margin-top: -1px;
+    font-size: 18px;
+  }
+
+  simple-character .character-header span {
+    font-size: 12px;
+  }
+
+  simple-character .character-details span {
+    font-size: 13px;
+  }
+}

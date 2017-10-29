@@ -1,0 +1,19 @@
+<div class="container">
+    <h3 class="page-header">Navigation</h3>
+    <p>On the map below you can find Willy's live location.</p>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Willy's position - latitude: {{vm.gpsData.latitude}}, longitude: {{vm.gpsData.longitude}}, satellites:
+                {{vm.gpsData.satellites}}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom'>
+                <ui-gmap-marker coords="vm.marker.coords" idkey="vm.marker.id"></ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
+    </div>
+
+</div>

@@ -10,7 +10,7 @@ using Willy.Core.Models;
 
 namespace Willy.Core
 {
-    public class RosClient : IDisposable
+    public class RosClient : IRosClient, IDisposable
     {
         private readonly Dictionary<string, RosServiceCall> _callQueue;
         private string _messageBuffer;
@@ -32,17 +32,6 @@ namespace Willy.Core
             WebSocket?.Dispose();
         }
 
-        private void OnRosMessage(object sender, RosMessageEventArgs rosMessageEventArgs)
-        {
-            if (rosMessageEventArgs.Id != null && _callQueue.ContainsKey(rosMessageEventArgs.Id))
-            {
-                var queuedService = _callQueue[rosMessageEventArgs.Id];
-                queuedService.SetResponse(queuedService.Name, rosMessageEventArgs);
-
-                _callQueue.Remove(rosMessageEventArgs.Id);
-            }
-        }
-
         public async Task ConnectAsync()
         {
             await WebSocket.ConnectAsync(new Uri("ws://192.168.0.100:9090"), CancellationToken.None);
@@ -51,24 +40,6 @@ namespace Willy.Core
 #pragma warning disable 4014
             Task.Run(ReceiveTask);
 #pragma warning restore 4014
-        }
-
-        public async Task ReceiveTask()
-        {
-            while (WebSocket.State == WebSocketState.Open)
-            {
-                var bytes = new ArraySegment<byte>(new byte[4096]);
-
-                var result = await WebSocket.ReceiveAsync(bytes, CancellationToken.None);
-                _messageBuffer += Encoding.Default.GetString(bytes.ToArray());
-
-                if (result.EndOfMessage)
-                {
-                    var args = RosMessageEventArgs.FromJson(_messageBuffer);
-                    OnRosMessage(args);
-                    _messageBuffer = "";
-                }
-            }
         }
 
         public async Task<RosServiceResponse> CallServiceAsync(RosServiceCall service)
@@ -90,14 +61,14 @@ namespace Willy.Core
                     return null;
             }
 
-            return (RosServiceResponse) service.Response;
+            return service.Response;
         }
 
         public async Task SetParamValueAsync(string paramName, object param)
         {
             var service = new RosServiceCall("/rosapi/set_param")
             {
-                Arguments = new Dictionary<string, object> {{"name", paramName}, {"value", "\"" + param + "\""}}
+                Arguments = new Dictionary<string, object> { { "name", paramName }, { "value", "\"" + param + "\"" } }
             };
             await CallServiceAsync(service);
         }
@@ -106,13 +77,42 @@ namespace Willy.Core
         {
             var service = new RosServiceCall("/rosapi/get_param")
             {
-                Arguments = new Dictionary<string, object> {{"name", paramName}}
+                Arguments = new Dictionary<string, object> { { "name", paramName } }
             };
             var result = await CallServiceAsync(service);
             return result.TryGetValuesAsDictionary().FirstOrDefault().Value;
         }
 
-        protected virtual void OnRosMessage(RosMessageEventArgs e)
+        private async Task ReceiveTask()
+        {
+            while (WebSocket.State == WebSocketState.Open)
+            {
+                var bytes = new ArraySegment<byte>(new byte[4096]);
+
+                var result = await WebSocket.ReceiveAsync(bytes, CancellationToken.None);
+                _messageBuffer += Encoding.Default.GetString(bytes.ToArray());
+
+                if (result.EndOfMessage)
+                {
+                    var args = RosMessageEventArgs.FromJson(_messageBuffer);
+                    OnRosMessage(args);
+                    _messageBuffer = "";
+                }
+            }
+        }
+
+        private void OnRosMessage(object sender, RosMessageEventArgs rosMessageEventArgs)
+        {
+            if (rosMessageEventArgs.Id != null && _callQueue.ContainsKey(rosMessageEventArgs.Id))
+            {
+                var queuedService = _callQueue[rosMessageEventArgs.Id];
+                queuedService.SetResponse(queuedService.Name, rosMessageEventArgs);
+
+                _callQueue.Remove(rosMessageEventArgs.Id);
+            }
+        }
+
+        private void OnRosMessage(RosMessageEventArgs e)
         {
             var handler = RosMessage;
             handler?.Invoke(this, e);
