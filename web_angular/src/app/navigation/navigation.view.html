@@ -6,7 +6,8 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Willy's position - latitude: {{vm.gpsData.latitude}}, longitude: {{vm.gpsData.longitude}}, satellites:
+                        Willy's position - latitude: {{vm.gpsData.latitude}}, longitude: {{vm.gpsData.longitude}},
+                        satellites:
                         {{vm.gpsData.satellites}}
                     </h3>
                 </div>
@@ -19,20 +20,20 @@
         </div>
         <div class="col-md-4">
             <p>Below you can find the raw data of Willy's sonars</p>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sonar</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(key, value) in vm.sonarData">
-                    <td>{{key}}</td>
-                    <td>{{value}}</td>
-                </tr>
-                </tbody>
-            </table>
+
+            <div class="sonar-wrapper">
+                <div class="sonar frontLeftSide">{{vm.sonarData['frontLeftSide']}}</div>
+                <div class="sonar frontLeft">{{vm.sonarData['frontLeft']}}</div>
+                <div class="sonar frontCenter">{{vm.sonarData['frontCenter']}}</div>
+                <div class="sonar frontRight">{{vm.sonarData['frontRight']}}</div>
+                <div class="sonar frontRightSide">{{vm.sonarData['frontRightSide']}}</div>
+                <div class="sonar backLeftSide">{{vm.sonarData['backLeftSide']}}</div>
+                <div class="sonar backLeft">{{vm.sonarData['backLeft']}}</div>
+                <div class="sonar backCenter">{{vm.sonarData['backCenter']}}</div>
+                <div class="sonar backRight">{{vm.sonarData['backRight']}}</div>
+                <div class="sonar backRightSide">{{vm.sonarData['backRightSide']}}</div>
+                <div class="willy-image"></div>
+            </div>
         </div>
     </div>
 </div>
