@@ -3,7 +3,7 @@
 
     angular.module('app')
         // Production
-        // .constant('ApiUrl', 'https://bis-inspect.com/api/');
+        .constant('ApiUrl', 'http://' + window.location.hostname + '/api/');
         // Development
-        .constant('ApiUrl', 'http://localhost:53419/api/');
+        // .constant('ApiUrl', 'http://localhost:53419/api/');
 })();

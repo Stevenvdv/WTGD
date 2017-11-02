@@ -32,9 +32,9 @@ namespace Willy.Core
             WebSocket?.Dispose();
         }
 
-        public async Task ConnectAsync()
+        public async Task ConnectAsync(Uri uri)
         {
-            await WebSocket.ConnectAsync(new Uri("ws://192.168.0.100:9090"), CancellationToken.None);
+            await WebSocket.ConnectAsync(uri, CancellationToken.None);
 
             // I don't care, the receive task has to run in the background anyway
 #pragma warning disable 4014

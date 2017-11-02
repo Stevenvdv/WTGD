@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,10 @@ namespace Willy.Web
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -46,7 +51,11 @@ namespace Willy.Web
                     .AllowAnyHeader()
             );
             app.UseMvc();
-            app.UseSignalR(builder => builder.MapHub<GpsHub>("gps"));
+            app.UseSignalR(builder =>
+            {
+                builder.MapHub<GpsHub>("gps");
+                builder.MapHub<SonarHub>("sonar");
+            });
         }
     }
 }
