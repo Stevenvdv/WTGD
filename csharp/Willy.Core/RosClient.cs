@@ -25,17 +25,19 @@ namespace Willy.Core
             RosMessage += OnRosMessage;
         }
 
-        public ClientWebSocket WebSocket { get; }
-
         public void Dispose()
         {
             WebSocket?.Dispose();
         }
 
+        public ClientWebSocket WebSocket { get; private set; }
+
         public async Task ConnectAsync(Uri uri)
         {
-            await WebSocket.ConnectAsync(uri, CancellationToken.None);
+            WebSocket?.Dispose();
+            WebSocket = new ClientWebSocket();
 
+            await WebSocket.ConnectAsync(uri, CancellationToken.None);
             // I don't care, the receive task has to run in the background anyway
 #pragma warning disable 4014
             Task.Run(ReceiveTask);
@@ -68,7 +70,7 @@ namespace Willy.Core
         {
             var service = new RosServiceCall("/rosapi/set_param")
             {
-                Arguments = new Dictionary<string, object> { { "name", paramName }, { "value", "\"" + param + "\"" } }
+                Arguments = new Dictionary<string, object> {{"name", paramName}, {"value", "\"" + param + "\""}}
             };
             await CallServiceAsync(service);
         }
@@ -77,11 +79,13 @@ namespace Willy.Core
         {
             var service = new RosServiceCall("/rosapi/get_param")
             {
-                Arguments = new Dictionary<string, object> { { "name", paramName } }
+                Arguments = new Dictionary<string, object> {{"name", paramName}}
             };
             var result = await CallServiceAsync(service);
             return result.TryGetValuesAsDictionary().FirstOrDefault().Value;
         }
+
+        public event EventHandler<RosMessageEventArgs> RosMessage;
 
         private async Task ReceiveTask()
         {
@@ -89,14 +93,22 @@ namespace Willy.Core
             {
                 var bytes = new ArraySegment<byte>(new byte[4096]);
 
-                var result = await WebSocket.ReceiveAsync(bytes, CancellationToken.None);
-                _messageBuffer += Encoding.Default.GetString(bytes.ToArray());
-
-                if (result.EndOfMessage)
+                try
                 {
-                    var args = RosMessageEventArgs.FromJson(_messageBuffer);
-                    OnRosMessage(args);
-                    _messageBuffer = "";
+                    var result = await WebSocket.ReceiveAsync(bytes, CancellationToken.None);
+                    _messageBuffer += Encoding.Default.GetString(bytes.ToArray());
+
+                    if (result.EndOfMessage)
+                    {
+                        var args = RosMessageEventArgs.FromJson(_messageBuffer);
+                        OnRosMessage(args);
+                        _messageBuffer = "";
+                    }
+                }
+                catch (Exception)
+                {
+                    WebSocket.Abort();
+                    throw;
                 }
             }
         }
@@ -117,7 +129,5 @@ namespace Willy.Core
             var handler = RosMessage;
             handler?.Invoke(this, e);
         }
-
-        public event EventHandler<RosMessageEventArgs> RosMessage;
     }
 }

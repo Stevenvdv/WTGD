@@ -12,7 +12,7 @@
 }
 
 #loading-bar-spinner .spinner-icon {
-  border-top-color:  #fff;
+  border-top-color: #fff;
   border-left-color: #fff;
 }
 
@@ -22,35 +22,34 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .3);
 }
 
-.ui-notification.warning
-{
+.ui-notification.warning {
   color: #fff;
   background: darken($brand-warning, 5%);
 }
-.ui-notification.error
-{
+
+.ui-notification.error {
   color: #fff;
   background: $brand-danger;
 }
-.ui-notification.success
-{
+
+.ui-notification.success {
   color: #fff;
   background: darken($brand-success, 10%);
 }
-.ui-notification.info
-{
+
+.ui-notification.info {
   color: #fff;
   background: $brand-info;
 }
 
 *::-webkit-scrollbar-track {
   -webkit-box-shadow: none;
-  background-color: #191919;
+  background-color: #acacac;
 }
 
 *::-webkit-scrollbar {
   width: 6px;
-  background-color: #191919;
+  background-color: #ACACAC;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -59,16 +58,16 @@
 
 *::-webkit-scrollbar-track:horizontal {
   -webkit-box-shadow: none;
-  background-color: #191919;
+  background-color: #ACACAC;
 }
 
 *::-webkit-scrollbar:horizontal {
   height: 6px;
-  background-color: #191919;
+  background-color: #ACACAC;
 }
 
 *::-webkit-scrollbar-corner {
-  background-color: #0d0d0d;
+  background-color: #ACACAC;
 }
 
 *::-webkit-scrollbar-thumb:horizontal {

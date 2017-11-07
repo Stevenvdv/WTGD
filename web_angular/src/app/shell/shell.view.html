@@ -1,0 +1,47 @@
+<div class="container">
+    <h3 class="page-header">Remote shell</h3>
+
+    <p>On this page you can access Willy's remote shell.</p>
+    <form class="form-horizontal" autocomplete="off" ng-hide="vm.shellConnected" ng-submit="vm.connect(vm.login)">
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="username">Username</label>
+            <div class="col-md-4">
+                <input id="username"
+                       ng-model="vm.login.username"
+                       type="text"
+                       placeholder="Username"
+                       class="form-control input-md"
+                       required>
+            </div>
+        </div>
+
+        <!-- Password input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="password">Password</label>
+            <div class="col-md-4">
+                <input id="password"
+                       ng-model="vm.login.password"
+                       type="password"
+                       placeholder="Password"
+                       class="form-control input-md"
+                       required>
+            </div>
+        </div>
+
+        <!-- Button -->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="login"></label>
+            <div class="col-md-4">
+                <button id="login" name="login" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </form>
+
+    <div ng-show="vm.shellConnected">
+        <pre ng-bind="vm.shellLines.join('\n')" id="shell"></pre>
+        <form ng-submit="vm.submitShellInput()">
+            <input type="text" class="form-control" title="Shell input" ng-model="vm.shellInput" placeholder="Command input here, only commands are supported no tab/arrows etc.">
+        </form>
+    </div>
+</div>

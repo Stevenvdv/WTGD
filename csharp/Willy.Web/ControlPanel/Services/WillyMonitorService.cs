@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -15,22 +16,57 @@ namespace Willy.Web.ControlPanel.Services
     {
         private readonly IHubContext<GpsHub> _gpsHubContext;
         private readonly IHubContext<SonarHub> _sonarHubContext;
+        private readonly IConfiguration _configuration;
         private readonly IRosClient _rosClient;
         
-        private readonly RosTopic _gpsTopic;
-        private readonly RosTopic _sonarTopic;
+        private RosTopic _gpsTopic;
+        private RosTopic _sonarTopic;
+        private bool _running;
 
         public WillyMonitorService(IConfiguration configuration, IRosClient rosClient, IHubContext<GpsHub> gpsHubContext, IHubContext<SonarHub> sonarHubContext)
         {
+            _configuration = configuration;
             _rosClient = rosClient;
             _gpsHubContext = gpsHubContext;
             _sonarHubContext = sonarHubContext;
-            
-            Task.Run(() => _rosClient.ConnectAsync(new Uri(configuration["RosBridgeUri"]))).Wait();
-            _gpsTopic = new RosTopic(_rosClient, "/gps", null);
-            _gpsTopic.RosMessage += GpsTopicOnRosMessage;
-            _sonarTopic = new RosTopic(_rosClient, "/sonar", null);
-            _sonarTopic.RosMessage += SonarTopicOnRosMessage;
+            _running = true;
+
+            // A continuous task keeps the ROS connection in a good state
+            Task.Run(ClientStateTask);
+        }
+
+        private async Task ClientStateTask()
+        {
+            while (_running)
+            {
+                if (_rosClient.WebSocket.State == WebSocketState.Open)
+                    continue;
+                
+                // Remove the old topics if they exist 
+                _gpsTopic?.Dispose();
+                _sonarTopic?.Dispose();
+
+                // Create a new connection and topics
+                try
+                {
+                    await _rosClient.ConnectAsync(new Uri(_configuration["RosBridgeUri"]));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ROS connection failed:");
+                    Console.WriteLine(e);
+
+                    await Task.Delay(1000);
+                    continue;
+                }
+                
+                _gpsTopic = new RosTopic(_rosClient, "/gps", null);
+                _gpsTopic.RosMessage += GpsTopicOnRosMessage;
+                _sonarTopic = new RosTopic(_rosClient, "/sonar", null);
+                _sonarTopic.RosMessage += SonarTopicOnRosMessage;
+
+                await Task.Delay(1000);
+            }
         }
 
         private async void GpsTopicOnRosMessage(object sender, RosMessageEventArgs e)
@@ -64,9 +100,16 @@ namespace Willy.Web.ControlPanel.Services
             // Send the sonar data to all clients connected to the sonar hub
             await _sonarHubContext.Clients.All.InvokeAsync("sonarUpdate", sonarData);
         }
+
+        public void Dispose()
+        {
+            _running = false;
+            _gpsTopic?.Dispose();
+            _sonarTopic?.Dispose();
+        }
     }
 
-    public interface IWillyMonitorService
+    public interface IWillyMonitorService : IDisposable
     {
     }
 }

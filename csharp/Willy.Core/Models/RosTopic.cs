@@ -41,7 +41,8 @@ namespace Willy.Core.Models
 
         private async Task Unsubscribe()
         {
-            await _rosClient.WebSocket.SendAsync(Serialize("unsubscribe"), WebSocketMessageType.Text, true, CancellationToken.None);
+            if (_rosClient.WebSocket.State == WebSocketState.Open)
+                await _rosClient.WebSocket.SendAsync(Serialize("unsubscribe"), WebSocketMessageType.Text, true, CancellationToken.None);
             _rosClient.RosMessage -= RosClientOnRosMessage;
         }
 

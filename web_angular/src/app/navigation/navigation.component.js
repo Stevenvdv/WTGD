@@ -22,7 +22,7 @@
         });
         sonarHub.on('sonarUpdate', function (sonarData) {
             vm.sonarData = sonarData;
-            console.log(vm.sonarData);
+            console.log(sonarData);
             $scope.$apply();
         });
 
@@ -39,6 +39,12 @@
                 longitude: 6.095
             }
         };
+
+        // Stop both hubs when the scope is destroyed (when the user navigates away)
+        $scope.$on('$destroy', function() {
+            gpsHub.stop();
+            sonarHub.stop();
+        });
     }
 
 })();

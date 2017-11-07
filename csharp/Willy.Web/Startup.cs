@@ -27,8 +27,10 @@ namespace Willy.Web
             services.AddSignalR();
 
             // Register all services that will be injected later on
+            // TODO: Automate
             services.AddTransient<IRosClient, RosClient>();
             services.AddSingleton<IWillyMonitorService, WillyMonitorService>();
+            services.AddSingleton<ISshService, SshService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +57,7 @@ namespace Willy.Web
             {
                 builder.MapHub<GpsHub>("gps");
                 builder.MapHub<SonarHub>("sonar");
+                builder.MapHub<ShellHub>("shell");
             });
         }
     }
