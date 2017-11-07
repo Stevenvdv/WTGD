@@ -5,7 +5,7 @@
 
     /** @ngInject */
     function configBlock($locationProvider, $logProvider, NotificationProvider) {
-        $locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(false);
         $logProvider.debugEnabled(true);
 
         NotificationProvider.setOptions({

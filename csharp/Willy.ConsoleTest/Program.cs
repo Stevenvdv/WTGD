@@ -18,11 +18,11 @@ namespace Willy.ConsoleTest
         {
             var rosClient = new RosClient();
             Console.WriteLine("Connecting to ROS bridge...");
-            await rosClient.ConnectAsync();
+            await rosClient.ConnectAsync(new Uri("ws://10.8.0.2:9090"));
             Console.WriteLine("Connected!");
 
-            Console.WriteLine("Subscribing to topic 'sonar'...");
-            var topic = new RosTopic(rosClient, "/sonar", null);
+            Console.WriteLine("Subscribing to topic 'gps'...");
+            var topic = new RosTopic(rosClient, "/gps", null);
             Console.ReadLine();
 
         }

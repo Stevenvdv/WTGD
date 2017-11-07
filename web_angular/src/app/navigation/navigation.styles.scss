@@ -1,3 +1,67 @@
 navigation {
-    .angular-google-map-container { height: 600px; }
+  .angular-google-map-container {
+    height: 600px;
+  }
+
+  .sonar-wrapper {
+    margin-top: 20px;
+    width: 300px;
+    .sonar {
+      width: 30px;
+      text-align: center;
+      position: absolute;
+      background: red;
+      color: white;
+      border-radius: 2px;
+    }
+    .frontLeftSide {
+      top: 60px;
+      left: 40px;
+    }
+    .frontLeft {
+      top: 20px;
+      left: 105px;
+    }
+    .frontCenter {
+      top: 20px;
+      left: 152px;
+    }
+    .frontRight {
+      top: 20px;
+      left: 200px;
+    }
+    .frontRightSide {
+      top: 60px;
+      left: 270px;
+    }
+
+    .backLeftSide {
+      top: 200px;
+      left: 60px;
+    }
+    .backLeft {
+      top: 250px;
+      left: 105px;
+    }
+    .backCenter {
+      top: 250px;
+      left: 152px;
+    }
+    .backRight {
+      top: 250px;
+      left: 200px;
+    }
+    .backRightSide {
+      top: 200px;
+      left: 250px;
+    }
+  }
+
+  .willy-image {
+    margin: auto;
+    background-image: url(/images/willy_topdown.png);
+    width: 200px;
+    height: 257px;
+    background-size: cover;
+  }
 }
