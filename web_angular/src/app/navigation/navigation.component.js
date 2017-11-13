@@ -15,33 +15,66 @@
         var sonarHub = new signalR.HubConnection(ApiUrl.replace('api/', '') + 'sonar');
 
         gpsHub.on('gpsUpdate', function (gpsData) {
+            var coords = {lat: gpsData.latitude, lng: gpsData.longitude};
+
             vm.gpsData = gpsData;
-            vm.marker.coords.latitude = gpsData.latitude;
-            vm.marker.coords.longitude = gpsData.longitude;
+            vm.willyMarker.lat = coords.lat;
+            vm.willyMarker.lng = coords.lng;
+            vm.path.push(coords);
+
+            if (vm.historyMarkers.length > 49)
+                vm.historyMarkers.shift();
+            if (vm.path.length > 49)
+                vm.path.shift();
+            console.log(vm.path);
             $scope.$apply();
         });
         sonarHub.on('sonarUpdate', function (sonarData) {
             vm.sonarData = sonarData;
-            console.log(sonarData);
             $scope.$apply();
         });
 
         gpsHub.start();
         sonarHub.start();
 
-        // Spawn the map, default the position to Zwolle's city center
-        vm.map = {center: {latitude: 52.513, longitude: 6.095}, zoom: 16};
-        // Create a marker used to display Willy's position
-        vm.marker = {
-            id: 0,
-            coords: {
-                latitude: 52.513,
-                longitude: 6.095
+        vm.path = [];
+        vm.historyMarkers = [];
+
+        vm.watchOptions = {
+            paths: {
+                individual: {type: 'watch'}, //this keeps infdigest errors from happening.... (deep by default)
+                type: 'watchCollection'
             }
+        };
+        vm.windesheim = {
+            lat: 52.499937,
+            lng: 6.0801503,
+            zoom: 17,
+            message: 'windesheim'
+        };
+        vm.willyMarker = {
+            lat: 52.499937,
+            lng: 6.0801503,
+            icon: {
+                iconUrl: 'images/willy_topdown.png',
+                iconSize:     [35, 45], // size of the icon
+                iconAnchor:   [17.5, 22.5], // point of the icon which will correspond to marker's location
+            }
+        };
+        vm.willyPaths = {
+            p1: {
+                color: '#2196F3',
+                weight: 5,
+                latlngs: vm.path,
+                label: {message: "<h3>Route from Vienna to Paris</h3><p>Distance: 1211km</p>"}
+            }
+        };
+        vm.markers = {
+            mainMarker: vm.willyMarker
         };
 
         // Stop both hubs when the scope is destroyed (when the user navigates away)
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             gpsHub.stop();
             sonarHub.stop();
         });

@@ -13,10 +13,10 @@
             url: '/navigation',
             component: 'navigation',
             title: 'Navigation'
-        }).state('shell', {
-            url: '/shell',
-            component: 'shell',
-            title: 'Shell'
+        }).state('commands', {
+            url: '/commands',
+            component: 'commands',
+            title: 'Commands'
         });
 
         $urlRouterProvider.otherwise('/');

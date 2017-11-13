@@ -12,9 +12,13 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom'>
-                        <ui-gmap-marker coords="vm.marker.coords" idkey="vm.marker.id"></ui-gmap-marker>
-                    </ui-gmap-google-map>
+                    <leaflet defaults="vm.defaults"
+                             lf-center="vm.windesheim"
+                             paths="vm.willyPaths"
+                             markers="vm.markers"
+                             width="100%"
+                             height="480px">
+                    </leaflet>
                 </div>
             </div>
         </div>

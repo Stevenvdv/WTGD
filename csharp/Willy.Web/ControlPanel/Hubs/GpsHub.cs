@@ -10,6 +10,7 @@ namespace Willy.Web.ControlPanel.Hubs
         public GpsHub(IWillyMonitorService willyMonitorService)
         {
             _willyMonitorService = willyMonitorService;
+            _willyMonitorService.EnableTestData = false;
         }
     }
 }

@@ -3,7 +3,11 @@
 <head>
     <base href="/">
     <meta charset="utf-8">
-    <title ng-bind="title + ' &bullet; Willy'"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="thirdparty/signalr-client-1.0.0-alpha2-final.js"></script>
+
+    <title ng-bind="title + ' &bullet; Willy'">Home &bullet; Willy</title>
 
     <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
     <!-- bower:css -->
@@ -22,9 +26,6 @@
 
 <navbar></navbar>
 <div ui-view=""></div>
-
-<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCCMFfb-lxrHVQphCEM760jBFYyToq9w-I&sensor=false"></script>
-<script src="signalr/signalr-client-1.0.0-alpha2-final.js"></script>
 
 <!-- build:js(src) scripts/vendor.js -->
 <!-- bower:js -->
