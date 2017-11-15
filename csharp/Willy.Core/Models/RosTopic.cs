@@ -11,10 +11,10 @@ namespace Willy.Core.Models
 {
     public class RosTopic : IDisposable
     {
-        private readonly RosClient _rosClient;
+        private readonly IRosClient _rosClient;
         private string _guid;
 
-        public RosTopic(RosClient rosClient, string topic, string messageType)
+        public RosTopic(IRosClient rosClient, string topic, string messageType)
         {
             _rosClient = rosClient;
             _guid = Guid.NewGuid().ToString();
@@ -22,24 +22,27 @@ namespace Willy.Core.Models
             Topic = topic;
             MessageType = messageType;
 
-            var task = Task.Run(async () => { await BridgeSubscribe(); });
+            var task = Task.Run(async () => { await Subscribe(); });
             task.Wait();
         }
 
-        private void RosClientOnRosMessage(object sender, RosMessageEventArgs rosMessageEventArgs)
+        private void RosClientOnRosMessage(object sender, RosMessageEventArgs e)
         {
-            Console.WriteLine(rosMessageEventArgs.Json["msg"]);
+            // Only trigger a ROS message if the topics match
+            if (e.Json["topic"].Value<string>() == Topic)
+                OnRosMessage(e);
         }
 
-        private async Task BridgeSubscribe()
+        private async Task Subscribe()
         {
             await _rosClient.WebSocket.SendAsync(Serialize("subscribe"), WebSocketMessageType.Text, true, CancellationToken.None);
             _rosClient.RosMessage += RosClientOnRosMessage;
         }
 
-        private async Task BridgeUnsubscribe()
+        private async Task Unsubscribe()
         {
-            await _rosClient.WebSocket.SendAsync(Serialize("unsubscribe"), WebSocketMessageType.Text, true, CancellationToken.None);
+            if (_rosClient.WebSocket.State == WebSocketState.Open)
+                await _rosClient.WebSocket.SendAsync(Serialize("unsubscribe"), WebSocketMessageType.Text, true, CancellationToken.None);
             _rosClient.RosMessage -= RosClientOnRosMessage;
         }
 
@@ -63,8 +66,16 @@ namespace Willy.Core.Models
 
         public void Dispose()
         {
-            var task = Task.Run(async () => { await BridgeUnsubscribe(); });
+            var task = Task.Run(async () => { await Unsubscribe(); });
             task.Wait();
         }
+
+        private void OnRosMessage(RosMessageEventArgs e)
+        {
+            var handler = RosMessage;
+            handler?.Invoke(this, e);
+        }
+
+        public event EventHandler<RosMessageEventArgs> RosMessage;
     }
 }

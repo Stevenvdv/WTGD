@@ -1,4 +1,4 @@
-(function () {
+    (function () {
     'use strict';
 
     angular.module('app', [
@@ -10,7 +10,8 @@
         'LocalStorageModule',
         'ngLodash',
         'ui-notification',
-        'uiGmapgoogle-maps'
+        'nemLogging',
+        'ui-leaflet'
     ]);
 
 })();

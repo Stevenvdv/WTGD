@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +27,10 @@ namespace Willy.Web
             services.AddSignalR();
 
             // Register all services that will be injected later on
+            // TODO: Automate
             services.AddTransient<IRosClient, RosClient>();
             services.AddSingleton<IWillyMonitorService, WillyMonitorService>();
+            services.AddSingleton<ICommandService, CommandService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +38,10 @@ namespace Willy.Web
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -46,7 +53,12 @@ namespace Willy.Web
                     .AllowAnyHeader()
             );
             app.UseMvc();
-            app.UseSignalR(builder => builder.MapHub<GpsHub>("gps"));
+            app.UseSignalR(builder =>
+            {
+                builder.MapHub<GpsHub>("gps");
+                builder.MapHub<SonarHub>("sonar");
+                builder.MapHub<CommandHub>("command");
+            });
         }
     }
 }

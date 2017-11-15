@@ -1,0 +1,13 @@
+commands {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  #commands {
+    height: 400px;
+    margin-bottom: 10px;
+  }
+}
