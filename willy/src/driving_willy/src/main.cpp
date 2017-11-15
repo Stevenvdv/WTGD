@@ -78,11 +78,12 @@ int main(int argc, char** argv)
   Transform transformOdometryData  = Transform(&n);
 
 	//Set up the subsriber of the wheel encoders to the WheelCallback of the WillyController.
-  ros::Subscriber subWheelEncoder = n.subscribe("wheel_encoder", 100, &Transform::WheelCallback, &transformOdometryData);
+  ros::Subscriber subWheelEncoder = n.subscribe("/wheel_encoder", 100, &Transform::WheelCallback, &transformOdometryData);
+  ros::Subscriber subWheelEncoderWillyController = n.subscribe("/wheel_encoder", 100, &WillyController::WheelCallback, &controller);
 
   //Set up the subscriber for the sonar
   ros::Subscriber subSonar = n.subscribe("/sonar", 100, &WillyController::SonarCallback, &controller);
-
+  transformOdometryData.TransformData();
   //Gives the node to the controller.
   controller.SetNode(&n);
 
@@ -91,7 +92,6 @@ int main(int argc, char** argv)
 	spinner.start();
 
 	AutonomousDrivingController autonomouseDriving = AutonomousDrivingController(&controller);
-  //transformOdometryData.TransformData();
 	autonomouseDriving.Start();
 
 	// Wait

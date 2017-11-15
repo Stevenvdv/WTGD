@@ -20,9 +20,8 @@ void Transform::WheelCallback(const geometry_msgs::Vector3::ConstPtr& ticks)
 
 Transform::Transform(ros::NodeHandle *n)
 {
-  odom_pub = n->advertise<nav_msgs::Odometry>("odom", 50);
+  odom_pub = n->advertise<nav_msgs::Odometry>("/odom", 50);
 
-  current_time = ros::Time::now();
   last_time = ros::Time::now();
 
   DistancePerCount = (3.14159265 * 0.34) / 2763;
