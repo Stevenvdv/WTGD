@@ -1,10 +1,13 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Willy.Core;
+using Willy.Web.Contexts;
 using Willy.Web.ControlPanel.Hubs;
 using Willy.Web.ControlPanel.Services;
 
@@ -22,6 +25,8 @@ namespace Willy.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<WillyContext>(options => options.UseNpgsql(Configuration.GetConnectionString("WillyContext")));
+
             services.AddCors();
             services.AddMvc();
             services.AddSignalR();
