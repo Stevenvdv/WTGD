@@ -1,6 +1,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
-	
+
 	//CPP Plugins
 	#include <iostream>
 	#include <queue>
@@ -12,8 +12,8 @@
 
 	#include <geometry_msgs/Vector3.h>
 	#include <geometry_msgs/Twist.h>
-	
-	
+
+
 	// ROS includes
 	#include <ros/ros.h>
 	#include <sensor_msgs/PointCloud2.h>
@@ -34,20 +34,20 @@
 	// People Detection Includes
 	#include <image_transport/image_transport.h>
 	#include <cv_bridge/cv_bridge.h>
-	
+
 	//OpenCV
 	#include <opencv2/opencv.hpp>
 	#include <opencv2/imgproc/imgproc.hpp>
 	#include <opencv2/highgui/highgui.hpp>
 
-	
+
 	//Projects scripts
 	#include "Interfaces/ICommand.h"
-	
+
 	#include "Controllers/WillyController.h"
 	#include "Controllers/AutonomousDrivingController.h"
 	//#include "Controllers/PeopleDetectorController.h"
-	
+
 	#include "Commands/Turn.h"
 	#include "Commands/Forward.h"
 	#include "Commands/Backward.h"
@@ -56,6 +56,8 @@
 	#include "Commands/ForwardUntilHit.h"
 	#include "peopledetect.h"
 
+	//odometry includes
+	#include "Odometry/Transform.h"
 
 	#include <fstream>
 
