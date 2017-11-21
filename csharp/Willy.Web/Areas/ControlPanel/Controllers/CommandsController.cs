@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Willy.Web.Contexts;
-using Willy.Web.ControlPanel.Entities;
+using Willy.Web.Entities;
 
-namespace Willy.Web.ControlPanel.Controllers
+namespace Willy.Web.Areas.ControlPanel.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Commands")]
+    [Route("api/controlpanel/[controller]")]
+    [Authorize(Roles = "Administrator, Manager", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CommandsController : Controller
     {
         private readonly WillyContext _context;
@@ -43,6 +46,7 @@ namespace Willy.Web.ControlPanel.Controllers
 
         // PUT: api/Commands/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutCommand([FromRoute] int id, [FromBody] Command command)
         {
             if (!ModelState.IsValid)
@@ -69,6 +73,7 @@ namespace Willy.Web.ControlPanel.Controllers
 
         // POST: api/Commands
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PostCommand([FromBody] Command command)
         {
             if (!ModelState.IsValid)
@@ -82,6 +87,7 @@ namespace Willy.Web.ControlPanel.Controllers
 
         // DELETE: api/Commands/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCommand([FromRoute] int id)
         {
             if (!ModelState.IsValid)

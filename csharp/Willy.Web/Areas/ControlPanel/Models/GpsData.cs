@@ -1,4 +1,4 @@
-﻿namespace Willy.Web.ControlPanel.Models
+﻿namespace Willy.Web.Areas.ControlPanel.Models
 {
     public class GpsData
     {

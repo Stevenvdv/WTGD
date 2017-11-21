@@ -7,11 +7,11 @@
     });
 
     /** @ngInject */
-    function CommandsController($scope, Command, ApiUrl, $uibModal, Notification, dialogService) {
+    function CommandsController($scope, Command, SignalRUrl, $uibModal, Notification, dialogService) {
         var vm = this;
         vm.commandLines = [];
         // Setup SignalR
-        var commandHub = new signalR.HubConnection(ApiUrl.replace('api/', '') + 'command');
+        var commandHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/command');
 
         commandHub.on('commandOutput', function (commandOutput) {
             vm.commandLines.push(commandOutput);
@@ -56,12 +56,12 @@
         };
 
         vm.deleteCommand = function (command) {
-          dialogService.confirm('Are you sure you want to remove this command?', function (result) {
-              Notification({
-                  message: 'Successfully deleted the <strong>' + command.name + '</strong> command.',
-                  title: 'Command deletion'
-              });
-          });
+            dialogService.confirm('Are you sure you want to remove this command?', function (result) {
+                Notification({
+                    message: 'Successfully deleted the <strong>' + command.name + '</strong> command.',
+                    title: 'Command deletion'
+                });
+            });
         };
 
         vm.submitCommandInput = function () {

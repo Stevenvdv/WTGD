@@ -8,10 +8,10 @@ using Newtonsoft.Json.Linq;
 using Willy.Core;
 using Willy.Core.Events;
 using Willy.Core.Models;
-using Willy.Web.ControlPanel.Hubs;
-using Willy.Web.ControlPanel.Models;
+using Willy.Web.Areas.ControlPanel.Hubs;
+using Willy.Web.Areas.ControlPanel.Models;
 
-namespace Willy.Web.ControlPanel.Services
+namespace Willy.Web.Areas.ControlPanel.Services
 {
     public class WillyMonitorService : IWillyMonitorService
     {

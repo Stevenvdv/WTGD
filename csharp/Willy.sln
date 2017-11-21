@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willy.Core", "Willy.Core\Wi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willy.ConsoleTest", "Willy.ConsoleTest\Willy.ConsoleTest.csproj", "{B21F65BF-27DB-4410-A99B-4F7BCAA23490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willy.Web", "Willy.Web\Willy.Web.csproj", "{C3E8C9E0-EDF0-4A56-BABD-7D9AE0812154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willy.Web", "Willy.Web\Willy.Web.csproj", "{C3E8C9E0-EDF0-4A56-BABD-7D9AE0812154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

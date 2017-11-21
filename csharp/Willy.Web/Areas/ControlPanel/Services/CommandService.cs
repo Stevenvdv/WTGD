@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.SignalR;
-using Willy.Web.ControlPanel.Hubs;
+using Willy.Web.Areas.ControlPanel.Hubs;
 
-namespace Willy.Web.ControlPanel.Services
+namespace Willy.Web.Areas.ControlPanel.Services
 {
     public class CommandService : ICommandService
     {

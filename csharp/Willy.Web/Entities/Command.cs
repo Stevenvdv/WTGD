@@ -1,4 +1,4 @@
-﻿namespace Willy.Web.ControlPanel.Entities
+﻿namespace Willy.Web.Entities
 {
     public class Command
     {

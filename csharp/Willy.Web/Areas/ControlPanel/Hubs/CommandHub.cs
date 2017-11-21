@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Willy.Web.ControlPanel.Services;
+using Willy.Web.Areas.ControlPanel.Services;
 
-namespace Willy.Web.ControlPanel.Hubs
+namespace Willy.Web.Areas.ControlPanel.Hubs
 {
+    [Route("signalr/controlpanel/command")]
+    [Authorize]
     public class CommandHub : Hub
     {
         private readonly ICommandService _commandService;
