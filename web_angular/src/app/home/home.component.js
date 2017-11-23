@@ -8,7 +8,15 @@
     });
 
     /** @ngInject */
-    function HomeController() {
+    function HomeController($http, ApiUrl) {
+        var vm = this;
+
+        vm.getSystemState = function () {
+            $http.get(ApiUrl + 'controlpanel/systemstate').then(function (result) {
+                console.log(result);
+            })
+        };
+        vm.getSystemState();
     }
 
 })();

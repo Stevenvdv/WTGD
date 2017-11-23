@@ -9,6 +9,10 @@
             url: '/',
             component: 'home',
             title: 'Home'
+        }).state('login', {
+            url: '/login',
+            component: 'login',
+            title: 'Login'
         }).state('navigation', {
             url: '/navigation',
             component: 'navigation',

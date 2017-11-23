@@ -29,6 +29,8 @@ namespace Willy.Web.Migrations
                 adminUser = await userManager.FindByNameAsync("Administrator");
             }
             await userManager.AddToRoleAsync(adminUser, "Administrator");
+            await userManager.AddToRoleAsync(adminUser, "Manager");
+            await userManager.AddToRoleAsync(adminUser, "SocialInteractor");
 
             // Create the default commands
             if (!context.Commands.Any())

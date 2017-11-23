@@ -8,7 +8,21 @@
     });
 
     /** @ngInject */
-    function NavbarController() {
+    function NavbarController($rootScope, authenticationService) {
+        var vm = this;
+        vm.currentUser = authenticationService.authentication.username;
+
+        $rootScope.$on('authorized', function () {
+            vm.currentUser = authenticationService.authentication.username;
+
+        });
+        $rootScope.$on('deauthorized', function () {
+            vm.currentUser = null;
+        });
+
+        vm.logOut = function () {
+            authenticationService.logOut();
+        }
     }
 
 })();

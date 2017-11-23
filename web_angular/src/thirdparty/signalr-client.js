@@ -142,9 +142,6 @@ class HttpClient {
     get(url, headers) {
         return this.xhr("GET", url, headers);
     }
-    options(url, headers) {
-        return this.xhr("OPTIONS", url, headers);
-    }
     post(url, content, headers) {
         return this.xhr("POST", url, headers, content);
     }
@@ -213,15 +210,27 @@ class HttpConnection {
     startInternal() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let negotiatePayload = yield this.httpClient.options(this.url);
-                let negotiateResponse = JSON.parse(negotiatePayload);
-                this.connectionId = negotiateResponse.connectionId;
-                // the user tries to stop the the connection when it is being started
-                if (this.connectionState == 3 /* Disconnected */) {
-                    return;
+                if (this.options.transport === Transports_1.TransportType.WebSockets) {
+                    this.transport = this.createTransport(this.options.transport, [Transports_1.TransportType[Transports_1.TransportType.WebSockets]]);
                 }
-                this.url += (this.url.indexOf("?") == -1 ? "?" : "&") + `id=${this.connectionId}`;
-                this.transport = this.createTransport(this.options.transport, negotiateResponse.availableTransports);
+                else {
+                    let headers;
+                    if (this.options.jwtBearer) {
+                        headers = new Map();
+                        headers.set("Authorization", `Bearer ${this.options.jwtBearer()}`);
+                    }
+                    let negotiatePayload = yield this.httpClient.post(this.resolveNegotiateUrl(this.url), "", headers);
+                    let negotiateResponse = JSON.parse(negotiatePayload);
+                    this.connectionId = negotiateResponse.connectionId;
+                    // the user tries to stop the the connection when it is being started
+                    if (this.connectionState == 3 /* Disconnected */) {
+                        return;
+                    }
+                    if (this.connectionId) {
+                        this.url += (this.url.indexOf("?") === -1 ? "?" : "&") + `id=${this.connectionId}`;
+                        this.transport = this.createTransport(this.options.transport, negotiateResponse.availableTransports);
+                    }
+                }
                 this.transport.onreceive = this.onreceive;
                 this.transport.onclose = e => this.stopConnection(true, e);
                 let requestedTransferMode = this.features.transferMode === 2 /* Binary */
@@ -242,17 +251,17 @@ class HttpConnection {
         });
     }
     createTransport(transport, availableTransports) {
-        if (!transport && availableTransports.length > 0) {
+        if ((transport === null || transport === undefined) && availableTransports.length > 0) {
             transport = Transports_1.TransportType[availableTransports[0]];
         }
         if (transport === Transports_1.TransportType.WebSockets && availableTransports.indexOf(Transports_1.TransportType[transport]) >= 0) {
-            return new Transports_1.WebSocketTransport(this.logger);
+            return new Transports_1.WebSocketTransport(this.options.jwtBearer, this.logger);
         }
         if (transport === Transports_1.TransportType.ServerSentEvents && availableTransports.indexOf(Transports_1.TransportType[transport]) >= 0) {
-            return new Transports_1.ServerSentEventsTransport(this.httpClient, this.logger);
+            return new Transports_1.ServerSentEventsTransport(this.httpClient, this.options.jwtBearer, this.logger);
         }
         if (transport === Transports_1.TransportType.LongPolling && availableTransports.indexOf(Transports_1.TransportType[transport]) >= 0) {
-            return new Transports_1.LongPollingTransport(this.httpClient, this.logger);
+            return new Transports_1.LongPollingTransport(this.httpClient, this.options.jwtBearer, this.logger);
         }
         if (this.isITransport(transport)) {
             return transport;
@@ -317,6 +326,16 @@ class HttpConnection {
         let normalizedUrl = baseUrl + url;
         this.logger.log(ILogger_1.LogLevel.Information, `Normalizing '${url}' to '${normalizedUrl}'`);
         return normalizedUrl;
+    }
+    resolveNegotiateUrl(url) {
+        let index = url.indexOf("?");
+        let negotiateUrl = this.url.substring(0, index === -1 ? url.length : index);
+        if (negotiateUrl[negotiateUrl.length - 1] !== "/") {
+            negotiateUrl += "/";
+        }
+        negotiateUrl += "negotiate";
+        negotiateUrl += index === -1 ? "" : url.substring(index);
+        return negotiateUrl;
     }
 }
 exports.HttpConnection = HttpConnection;
@@ -392,15 +411,18 @@ class HubConnection {
                 case 1 /* Invocation */:
                     this.invokeClientMethod(message);
                     break;
-                case 2 /* Result */:
+                case 2 /* StreamItem */:
                 case 3 /* Completion */:
                     let callback = this.callbacks.get(message.invocationId);
                     if (callback != null) {
-                        if (message.type == 3 /* Completion */) {
+                        if (message.type === 3 /* Completion */) {
                             this.callbacks.delete(message.invocationId);
                         }
                         callback(message);
                     }
+                    break;
+                case 6 /* Ping */:
+                    // Don't care about pings
                     break;
                 default:
                     this.logger.log(ILogger_1.LogLevel.Warning, "Invalid message type: " + data);
@@ -421,13 +443,8 @@ class HubConnection {
         }
     }
     connectionClosed(error) {
-        let errorCompletionMessage = {
-            type: 3 /* Completion */,
-            invocationId: "-1",
-            error: error ? error.message : "Invocation cancelled due to connection being closed.",
-        };
         this.callbacks.forEach(callback => {
-            callback(errorCompletionMessage);
+            callback(undefined, error ? error : new Error("Invocation canceled due to connection being closed."));
         });
         this.callbacks.clear();
         this.closedCallbacks.forEach(c => c.apply(this, [error]));
@@ -451,19 +468,19 @@ class HubConnection {
         return this.connection.stop();
     }
     stream(methodName, ...args) {
-        let invocationDescriptor = this.createInvocation(methodName, args, false);
+        let invocationDescriptor = this.createStreamInvocation(methodName, args);
         let subject = new Observable_1.Subject();
-        this.callbacks.set(invocationDescriptor.invocationId, (invocationEvent) => {
+        this.callbacks.set(invocationDescriptor.invocationId, (invocationEvent, error) => {
+            if (error) {
+                subject.error(error);
+                return;
+            }
             if (invocationEvent.type === 3 /* Completion */) {
                 let completionMessage = invocationEvent;
                 if (completionMessage.error) {
                     subject.error(new Error(completionMessage.error));
                 }
-                else if (completionMessage.result) {
-                    subject.error(new Error("Server provided a result in a completion response to a streamed invocation."));
-                }
                 else {
-                    // TODO: Log a warning if there's a payload?
                     subject.complete();
                 }
             }
@@ -487,7 +504,11 @@ class HubConnection {
     invoke(methodName, ...args) {
         let invocationDescriptor = this.createInvocation(methodName, args, false);
         let p = new Promise((resolve, reject) => {
-            this.callbacks.set(invocationDescriptor.invocationId, (invocationEvent) => {
+            this.callbacks.set(invocationDescriptor.invocationId, (invocationEvent, error) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
                 if (invocationEvent.type === 3 /* Completion */) {
                     let completionMessage = invocationEvent;
                     if (completionMessage.error) {
@@ -498,7 +519,7 @@ class HubConnection {
                     }
                 }
                 else {
-                    reject(new Error("Streaming methods must be invoked using HubConnection.stream"));
+                    reject(new Error(`Unexpected message type: ${invocationEvent.type}`));
                 }
             });
             let message = this.protocol.writeMessage(invocationDescriptor);
@@ -548,6 +569,16 @@ class HubConnection {
             target: methodName,
             arguments: args,
             nonblocking: nonblocking
+        };
+    }
+    createStreamInvocation(methodName, args) {
+        let id = this.id;
+        this.id++;
+        return {
+            type: 4 /* StreamInvocation */,
+            invocationId: id.toString(),
+            target: methodName,
+            arguments: args,
         };
     }
 }
@@ -613,7 +644,20 @@ class ConsoleLogger {
     }
     log(logLevel, message) {
         if (logLevel >= this.minimumLogLevel) {
-            console.log(`${ILogger_1.LogLevel[logLevel]}: ${message}`);
+            switch (logLevel) {
+                case ILogger_1.LogLevel.Error:
+                    console.error(`${ILogger_1.LogLevel[logLevel]}: ${message}`);
+                    break;
+                case ILogger_1.LogLevel.Warning:
+                    console.warn(`${ILogger_1.LogLevel[logLevel]}: ${message}`);
+                    break;
+                case ILogger_1.LogLevel.Information:
+                    console.info(`${ILogger_1.LogLevel[logLevel]}: ${message}`);
+                    break;
+                default:
+                    console.log(`${ILogger_1.LogLevel[logLevel]}: ${message}`);
+                    break;
+            }
         }
     }
 }
@@ -651,12 +695,16 @@ class Subject {
     }
     error(err) {
         for (let observer of this.observers) {
-            observer.error(err);
+            if (observer.error) {
+                observer.error(err);
+            }
         }
     }
     complete() {
         for (let observer of this.observers) {
-            observer.complete();
+            if (observer.complete) {
+                observer.complete();
+            }
         }
     }
     subscribe(observer) {
@@ -687,12 +735,17 @@ var TransportType;
     TransportType[TransportType["LongPolling"] = 2] = "LongPolling";
 })(TransportType = exports.TransportType || (exports.TransportType = {}));
 class WebSocketTransport {
-    constructor(logger) {
+    constructor(jwtBearer, logger) {
         this.logger = logger;
+        this.jwtBearer = jwtBearer;
     }
     connect(url, requestedTransferMode) {
         return new Promise((resolve, reject) => {
             url = url.replace(/^http/, "ws");
+            if (this.jwtBearer) {
+                let token = this.jwtBearer();
+                url += (url.indexOf("?") < 0 ? "?" : "&") + `signalRTokenHeader=${token}`;
+            }
             let webSocket = new WebSocket(url);
             if (requestedTransferMode == 2 /* Binary */) {
                 webSocket.binaryType = "arraybuffer";
@@ -740,8 +793,9 @@ class WebSocketTransport {
 }
 exports.WebSocketTransport = WebSocketTransport;
 class ServerSentEventsTransport {
-    constructor(httpClient, logger) {
+    constructor(httpClient, jwtBearer, logger) {
         this.httpClient = httpClient;
+        this.jwtBearer = jwtBearer;
         this.logger = logger;
     }
     connect(url, requestedTransferMode) {
@@ -750,7 +804,11 @@ class ServerSentEventsTransport {
         }
         this.url = url;
         return new Promise((resolve, reject) => {
-            let eventSource = new EventSource(this.url);
+            if (this.jwtBearer) {
+                let token = this.jwtBearer();
+                url += (url.indexOf("?") < 0 ? "?" : "&") + `signalRTokenHeader=${token}`;
+            }
+            let eventSource = new EventSource(url);
             try {
                 eventSource.onmessage = (e) => {
                     if (this.onreceive) {
@@ -787,7 +845,7 @@ class ServerSentEventsTransport {
     }
     send(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return send(this.httpClient, this.url, data);
+            return send(this.httpClient, this.url, this.jwtBearer, data);
         });
     }
     stop() {
@@ -799,8 +857,9 @@ class ServerSentEventsTransport {
 }
 exports.ServerSentEventsTransport = ServerSentEventsTransport;
 class LongPollingTransport {
-    constructor(httpClient, logger) {
+    constructor(httpClient, jwtBearer, logger) {
         this.httpClient = httpClient;
+        this.jwtBearer = jwtBearer;
         this.logger = logger;
     }
     connect(url, requestedTransferMode) {
@@ -864,6 +923,9 @@ class LongPollingTransport {
         };
         this.pollXhr = pollXhr;
         this.pollXhr.open("GET", `${url}&_=${Date.now()}`, true);
+        if (this.jwtBearer) {
+            this.pollXhr.setRequestHeader("Authorization", `Bearer ${this.jwtBearer()}`);
+        }
         if (transferMode === 2 /* Binary */) {
             this.pollXhr.responseType = "arraybuffer";
         }
@@ -873,7 +935,7 @@ class LongPollingTransport {
     }
     send(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return send(this.httpClient, this.url, data);
+            return send(this.httpClient, this.url, this.jwtBearer, data);
         });
     }
     stop() {
@@ -885,9 +947,13 @@ class LongPollingTransport {
     }
 }
 exports.LongPollingTransport = LongPollingTransport;
-const headers = new Map();
-function send(httpClient, url, data) {
+function send(httpClient, url, jwtBearer, data) {
     return __awaiter(this, void 0, void 0, function* () {
+        let headers;
+        if (jwtBearer) {
+            headers = new Map();
+            headers.set("Authorization", `Bearer ${jwtBearer()}`);
+        }
         yield httpClient.post(url, data, headers);
     });
 }

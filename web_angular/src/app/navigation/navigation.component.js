@@ -7,12 +7,18 @@
     });
 
     /** @ngInject */
-    function NavigationController($scope, SignalRUrl) {
+    function NavigationController($scope, SignalRUrl, authenticationService) {
         var vm = this;
 
         // Setup SignalR
-        var gpsHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/gps');
-        var sonarHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/sonar');
+        var options = {
+            transport: 0, // use WebSockets, this is the default but since options is overwritten it needs to be supplied
+            jwtBearer: function () { // pass the JWT token
+                return authenticationService.authentication.token;
+            }
+        };
+        var gpsHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/gps', options);
+        var sonarHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/sonar', options);
 
         gpsHub.on('gpsUpdate', function (gpsData) {
             var coords = {lat: gpsData.latitude, lng: gpsData.longitude};

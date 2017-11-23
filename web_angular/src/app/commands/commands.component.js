@@ -7,11 +7,18 @@
     });
 
     /** @ngInject */
-    function CommandsController($scope, Command, SignalRUrl, $uibModal, Notification, dialogService) {
+    function CommandsController($scope, Command, SignalRUrl, $uibModal, Notification, dialogService, authenticationService) {
         var vm = this;
         vm.commandLines = [];
+
         // Setup SignalR
-        var commandHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/command');
+        var options = {
+            transport: 0, // use WebSockets, this is the default but since options is overwritten it needs to be supplied
+            jwtBearer: function () { // pass the JWT token
+                return authenticationService.authentication.token;
+            }
+        };
+        var commandHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/command', options);
 
         commandHub.on('commandOutput', function (commandOutput) {
             vm.commandLines.push(commandOutput);

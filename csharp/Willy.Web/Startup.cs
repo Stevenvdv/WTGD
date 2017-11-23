@@ -49,6 +49,19 @@ namespace Willy.Web
                         ValidAudience = Configuration["Security:Issuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:SecretKey"]))
                     };
+
+                    cfg.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var signalRTokenHeader = context.Request.Query["signalRTokenHeader"];
+                            if (!string.IsNullOrEmpty(signalRTokenHeader))
+                            {
+                                context.Token = context.Request.Query["signalRTokenHeader"];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // Configure ASP.NET and SignalR
