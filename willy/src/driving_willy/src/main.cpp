@@ -54,9 +54,6 @@ struct ConfigIterator: pugi::xml_tree_walker
 			controller.ChecksDriveBackward[controller.ChecksDriveBackwardElements] = check;
 			controller.ChecksDriveBackwardElements++;
 		}
-
-
-
         return true;
     }
 };
@@ -66,6 +63,7 @@ int main(int argc, char** argv)
 {
 
   pugi::xml_document ConfigFile;
+  odometry odometryController;
   ConfigFile.load_file("/home/willy/Documents/driving-willy/WTGD/willy/src/driving_willy/src/tree.xml");
 
   ConfigIterator walker;
@@ -74,16 +72,22 @@ int main(int argc, char** argv)
 	//Ros initation.
   ros::init(argc, argv, "DrivingWilly");
 	ros::NodeHandle n;
-
-  Transform transformOdometryData  = Transform(&n);
+  //placeholder values for gps route.
+  std::vector<double> gpsLat;
+  std::vector<double> gpsLong;
+  gpsLat.push_back(12.4235);
+  gpsLat.push_back(13.2355);
+  n.setParam("gpsLat",gpsLat);
+  gpsLong.push_back(10.4235);
+  gpsLong.push_back(11.2355);
+  n.setParam("gpsLong",gpsLong);
 
 	//Set up the subsriber of the wheel encoders to the WheelCallback of the WillyController.
-  ros::Subscriber subWheelEncoder = n.subscribe("/wheel_encoder", 100, &Transform::WheelCallback, &transformOdometryData);
-  ros::Subscriber subWheelEncoderWillyController = n.subscribe("/wheel_encoder", 100, &WillyController::WheelCallback, &controller);
+  ros::Subscriber subWheelEncoderWillyController = n.subscribe("/wheel_encoder", 200, &odometry::WheelCallback, &odometryController);
+  ros::Subscriber gpsSubscriber = n.subscribe("/gps", 200, &WillyController::GpsCallback, &controller);
 
   //Set up the subscriber for the sonar
   ros::Subscriber subSonar = n.subscribe("/sonar", 100, &WillyController::SonarCallback, &controller);
-  transformOdometryData.TransformData();
   //Gives the node to the controller.
   controller.SetNode(&n);
 
@@ -91,8 +95,8 @@ int main(int argc, char** argv)
 	ros::AsyncSpinner spinner(4);
 	spinner.start();
 
-	AutonomousDrivingController autonomouseDriving = AutonomousDrivingController(&controller);
-	autonomouseDriving.Start();
+  AutonomousDrivingController autonomouseDriving = AutonomousDrivingController(&controller,&n);
+  autonomouseDriving.Start();
 
 	// Wait
 	ros::waitForShutdown();

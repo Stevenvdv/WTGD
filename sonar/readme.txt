@@ -1,0 +1,2 @@
+The main.cpp file was created using the http://platformio.org/ editor.
+If you want to use the file within the Arduino editor, change the name to main.ino and add the necessary libraries to the Arduino library manager.

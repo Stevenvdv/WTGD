@@ -1,0 +1,18 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "transport": "ftp",
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "192.168.0.100",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "watch": [],
+  "target": "~/Documents/driving-willy/WTGD/arduino",
+  "username": "willy",
+  "password": "willy"
+}

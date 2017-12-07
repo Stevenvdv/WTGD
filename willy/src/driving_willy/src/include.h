@@ -12,6 +12,7 @@
 
 	#include <geometry_msgs/Vector3.h>
 	#include <geometry_msgs/Twist.h>
+	#include <std_msgs/String.h>
 
 
 	// ROS includes
@@ -42,7 +43,7 @@
 
 
 	//Projects scripts
-	#include "Interfaces/ICommand.h"
+	#include "Includes/Interfaces/ICommand.h"
 
 	#include "Controllers/WillyController.h"
 	#include "Controllers/AutonomousDrivingController.h"
@@ -57,7 +58,7 @@
 	#include "peopledetect.h"
 
 	//odometry includes
-	#include "Odometry/Transform.h"
+	#include "Odometry/odometry.h"
 
 	#include <fstream>
 
