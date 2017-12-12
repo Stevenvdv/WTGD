@@ -211,8 +211,8 @@ link_directories(${PCL_LIBRARY_DIRS})
 # catkin_add_nosetests(test)
 
 ## old stuff
-add_executable(odometry src/Odometry/odometry.cpp)
-target_link_libraries(odometry ${catkin_LIBRARIES})
+#add_executable(odometry src/Odometry/odometry.cpp)
+#target_link_libraries(odometry ${catkin_LIBRARIES})
 
 #add_executable(odometry1 src/Odometry/odometry1.cpp)
 #target_link_libraries(odometry1 ${catkin_LIBRARIES})
@@ -240,8 +240,7 @@ add_executable(main
 
 	src/Controllers/WillyController.cpp
 	src/Controllers/AutonomousDrivingController.cpp
-
-  src/Odometry/Transform.cpp
+    src/Odometry/odometry.cpp
 )
 
 target_link_libraries(main ${catkin_LIBRARIES} ${PCL_LIBRARIES})
