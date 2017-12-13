@@ -13,28 +13,32 @@ using Willy.Web.Areas.ControlPanel.Models;
 
 namespace Willy.Web.Areas.ControlPanel.Services
 {
-    public class WillyMonitorService : IWillyMonitorService
+    public class WillyRosService : IWillyRosService
     {
         private readonly IHubContext<GpsHub> _gpsHubContext;
         private readonly IHubContext<SonarHub> _sonarHubContext;
         private readonly IConfiguration _configuration;
-        private readonly IRosClient _rosClient;
 
         private RosTopic _gpsTopic;
         private RosTopic _sonarTopic;
         private bool _running;
 
-        public WillyMonitorService(IConfiguration configuration, IRosClient rosClient, IHubContext<GpsHub> gpsHubContext, IHubContext<SonarHub> sonarHubContext)
+        public WillyRosService(IConfiguration configuration, IRosClient rosClient, IHubContext<GpsHub> gpsHubContext, IHubContext<SonarHub> sonarHubContext)
         {
+            RosClient = rosClient;
+            
             _configuration = configuration;
-            _rosClient = rosClient;
             _gpsHubContext = gpsHubContext;
             _sonarHubContext = sonarHubContext;
             _running = true;
 
+            RosClient.ConnectAsync(new Uri(_configuration["RosBridgeUri"])).Wait();
+
             // A continuous task keeps the ROS connection in a good state
             Task.Run(ClientStateTask);
         }
+
+        public IRosClient RosClient { get; set; }
 
         private async Task ClientStateTask()
         {
@@ -43,7 +47,7 @@ namespace Willy.Web.Areas.ControlPanel.Services
                 if (EnableTestData)
                     SendTestData();
 
-                if (_rosClient.WebSocket.State == WebSocketState.Open)
+                if (RosClient.WebSocket.State == WebSocketState.Open)
                 {
                     await Task.Delay(1000);
                     continue;
@@ -56,7 +60,7 @@ namespace Willy.Web.Areas.ControlPanel.Services
                 // Create a new connection and topics
                 try
                 {
-                    await _rosClient.ConnectAsync(new Uri(_configuration["RosBridgeUri"]));
+                    await RosClient.ConnectAsync(new Uri(_configuration["RosBridgeUri"]));
                 }
                 catch (Exception e)
                 {
@@ -67,9 +71,9 @@ namespace Willy.Web.Areas.ControlPanel.Services
                     continue;
                 }
 
-                _gpsTopic = new RosTopic(_rosClient, "/gps", null);
+                _gpsTopic = new RosTopic(RosClient, "/gps", null);
                 _gpsTopic.RosMessage += GpsTopicOnRosMessage;
-                _sonarTopic = new RosTopic(_rosClient, "/sonar", null);
+                _sonarTopic = new RosTopic(RosClient, "/sonar", null);
                 _sonarTopic.RosMessage += SonarTopicOnRosMessage;
 
                 await Task.Delay(1000);
@@ -145,8 +149,9 @@ namespace Willy.Web.Areas.ControlPanel.Services
         }
     }
 
-    public interface IWillyMonitorService : IDisposable
+    public interface IWillyRosService : IDisposable
     {
         bool EnableTestData { get; set; }
+        IRosClient RosClient { get; set; }
     }
 }

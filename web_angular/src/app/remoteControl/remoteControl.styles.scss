@@ -1,0 +1,11 @@
+remote-control {
+  .joystick-panel {
+    height: 400px;
+  }
+  #joystick-container {
+    margin: -15px;
+    position: absolute;
+    width: 100%;
+    height: 400px;
+  }
+}

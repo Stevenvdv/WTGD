@@ -1,20 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Willy.Core;
-using Willy.Web.Areas.Authentication.Models;
 using Willy.Web.Areas.ControlPanel.Hubs;
 using Willy.Web.Areas.ControlPanel.Services;
 using Willy.Web.Contexts;
@@ -43,7 +38,7 @@ namespace Willy.Web
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
 
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    cfg.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = Configuration["Security:Issuer"],
                         ValidAudience = Configuration["Security:Issuer"],
@@ -56,9 +51,7 @@ namespace Willy.Web
                         {
                             var signalRTokenHeader = context.Request.Query["signalRTokenHeader"];
                             if (!string.IsNullOrEmpty(signalRTokenHeader))
-                            {
                                 context.Token = context.Request.Query["signalRTokenHeader"];
-                            }
                             return Task.CompletedTask;
                         }
                     };
@@ -72,7 +65,7 @@ namespace Willy.Web
             // Register all services that will be injected later on
             // TODO: Automate
             services.AddTransient<IRosClient, RosClient>();
-            services.AddSingleton<IWillyMonitorService, WillyMonitorService>();
+            services.AddSingleton<IWillyRosService, WillyRosService>();
             services.AddSingleton<ICommandService, CommandService>();
         }
 
@@ -103,6 +96,7 @@ namespace Willy.Web
                 builder.MapHub<GpsHub>("signalr/controlpanel/gps");
                 builder.MapHub<SonarHub>("signalr/controlpanel/sonar");
                 builder.MapHub<CommandHub>("signalr/controlpanel/command");
+                builder.MapHub<RemoteControlHub>("signalr/controlpanel/remoteControl");
             });
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

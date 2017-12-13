@@ -21,6 +21,10 @@
             url: '/commands',
             component: 'commands',
             title: 'Commands'
+        }).state('remoteControl', {
+            url: '/remote-control',
+            component: 'remoteControl',
+            title: 'Remote Control'
         });
 
         $urlRouterProvider.otherwise('/');

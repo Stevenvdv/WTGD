@@ -8,12 +8,12 @@ namespace Willy.Web.Areas.ControlPanel.Hubs
     public class GpsHub : Hub
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly IWillyMonitorService _willyMonitorService;
+        private readonly IWillyRosService _willyRosService;
 
-        public GpsHub(IWillyMonitorService willyMonitorService)
+        public GpsHub(IWillyRosService willyRosService)
         {
-            _willyMonitorService = willyMonitorService;
-            _willyMonitorService.EnableTestData = false;
+            _willyRosService = willyRosService;
+            _willyRosService.EnableTestData = false;
         }
     }
 }

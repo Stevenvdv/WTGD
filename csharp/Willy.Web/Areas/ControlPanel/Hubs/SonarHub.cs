@@ -8,11 +8,11 @@ namespace Willy.Web.Areas.ControlPanel.Hubs
     public class SonarHub : Hub
     {
         // ReSharper disable once NotAccessedField.Local
-        private readonly IWillyMonitorService _willyMonitorService;
+        private readonly IWillyRosService _willyRosService;
 
-        public SonarHub(IWillyMonitorService willyMonitorService)
+        public SonarHub(IWillyRosService willyRosService)
         {
-            _willyMonitorService = willyMonitorService;
+            _willyRosService = willyRosService;
         }
     }
 }

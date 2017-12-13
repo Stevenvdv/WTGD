@@ -59,7 +59,9 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
     }
   }
 }
-
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: #fff;
+}
 // Buttons ====================================================================
 
 @mixin btn($class,$bg,$color){

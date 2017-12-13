@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Willy.Core;
+using Willy.Core.MessageTypes;
 using Willy.Core.Models;
 
 namespace Willy.ConsoleTest
@@ -18,13 +17,14 @@ namespace Willy.ConsoleTest
         {
             var rosClient = new RosClient();
             Console.WriteLine("Connecting to ROS bridge...");
-            await rosClient.ConnectAsync(new Uri("ws://10.8.0.2:9090"));
+            await rosClient.ConnectAsync(new Uri("ws://192.168.0.100:10500"));
             Console.WriteLine("Connected!");
 
-            Console.WriteLine("Subscribing to topic 'gps'...");
-            var topic = new RosTopic(rosClient, "/gps", null);
+            Console.WriteLine("Initializing cmd_vel topic");
+            var topic = new RosTopic(rosClient, "/cmd_vel", "geometry_msgs/Twist");
+            var message = new Twist();
+            await topic.Publish(message);
             Console.ReadLine();
-
         }
     }
 }
