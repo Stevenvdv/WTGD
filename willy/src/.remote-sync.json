@@ -1,0 +1,18 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "transport": "ftp",
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "192.168.0.100",
+  "target": "~/Documents/driving-willy/WTGD/willy/src",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "willy",
+  "password": "willy",
+  "watch": []
+}

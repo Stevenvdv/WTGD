@@ -49,8 +49,8 @@ void updateInfo()
   // Serial.println(sizeof(gps.location.lat()));
   char lat[15];
   char lng[15];
-  dtostrf(gps.location.lat(),11,7,lat);
-  dtostrf(gps.location.lng(),11,7,lng);
+  dtostrf(gps.location.lat(),9,7,lat);
+  dtostrf(gps.location.lng(),8,7,lng);
   // Serial.println(lat);
   sprintf(msg, "%d,",gps.satellites.value());
   strcat(msg, lat);
@@ -60,7 +60,7 @@ void updateInfo()
   Wire.beginTransmission(0x01);
   Wire.write(msg);
   Wire.endTransmission();
-  // Serial.println("test");
+  Serial.println(msg);
   free(msg);
   // _delay_ms(100);
 }
