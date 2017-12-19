@@ -1,14 +1,38 @@
 <div class="container">
-    <h3 class="page-header">Remote command</h3>
-    <p>On this page you can execute commands on Willy.</p>
-
-    <pre ng-bind="vm.commandLines.join('\n')" id="commands"></pre>
-    <form ng-submit="vm.submitCommandInput()">
-        <input type="text"
-               class="form-control"
-               title="command input"
-               ng-model="vm.commandInput"
-               placeholder="Command input here, only commands are supported no tab/arrows etc.">
-    </form>
-
+    <div class="col-md-9">
+        <h4 class="page-header">
+            Remote command
+            <small>On this page you can execute commands on Willy.</small>
+        </h4>
+        <pre ng-bind="vm.commandLines.join('\n')" id="commands"></pre>
+        <form ng-submit="vm.submitCommandInput()">
+            <input type="text"
+                   class="form-control"
+                   title="command input"
+                   ng-model="vm.commandInput"
+                   placeholder="Command input here, only commands are supported no tab/arrows etc.">
+        </form>
+    </div>
+    <div class="col-md-3">
+        <h4 class="page-header">Saved commands</h4>
+        <div class="commands-container" ng-show="vm.commands.length">
+            <div class="command-container" ng-repeat="command in vm.commands" tooltip-placement="left"
+                 uib-tooltip="{{command.description}}">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" ng-click="vm.runCommand(command.content)">
+                        {{command.name}}
+                    </button>
+                    <button type="button" class="btn btn-danger" ng-click="vm.deleteCommand(command)">
+                        <fa name="trash"></fa>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p ng-hide="vm.commands.length" class="commands-container">
+            There are no saved commands yet.
+        </p>
+        <button type="button" class="btn btn-info" ng-click="vm.addCommand()">
+            <fa name="plus"></fa>&nbsp;Add command
+        </button>
+    </div>
 </div>

@@ -18,27 +18,28 @@
 
 .ui-notification {
   border-radius: 2px;
+  color: #fff;
   background: $brand-primary;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .3);
+
+  h3 {
+    color: #fff;
+  }
 }
 
 .ui-notification.warning {
-  color: #fff;
   background: darken($brand-warning, 5%);
 }
 
 .ui-notification.error {
-  color: #fff;
   background: $brand-danger;
 }
 
 .ui-notification.success {
-  color: #fff;
   background: darken($brand-success, 10%);
 }
 
 .ui-notification.info {
-  color: #fff;
   background: $brand-info;
 }
 

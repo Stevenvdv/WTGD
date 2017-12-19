@@ -7,12 +7,18 @@
     });
 
     /** @ngInject */
-    function NavigationController($scope, ApiUrl) {
+    function NavigationController($scope, SignalRUrl, authenticationService) {
         var vm = this;
 
         // Setup SignalR
-        var gpsHub = new signalR.HubConnection(ApiUrl.replace('api/', '') + 'gps');
-        var sonarHub = new signalR.HubConnection(ApiUrl.replace('api/', '') + 'sonar');
+        var options = {
+            transport: 0, // use WebSockets, this is the default but since options is overwritten it needs to be supplied
+            jwtBearer: function () { // pass the JWT token
+                return authenticationService.authentication.token;
+            }
+        };
+        var gpsHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/gps', options);
+        var sonarHub = new signalR.HubConnection(SignalRUrl + 'controlpanel/sonar', options);
 
         gpsHub.on('gpsUpdate', function (gpsData) {
             var coords = {lat: gpsData.latitude, lng: gpsData.longitude};
@@ -57,16 +63,15 @@
             lng: 6.0801503,
             icon: {
                 iconUrl: 'images/willy_topdown.png',
-                iconSize:     [35, 45], // size of the icon
-                iconAnchor:   [17.5, 22.5], // point of the icon which will correspond to marker's location
+                iconSize: [35, 45], // size of the icon
+                iconAnchor: [17.5, 22.5], // point of the icon which will correspond to marker's location
             }
         };
         vm.willyPaths = {
             p1: {
                 color: '#2196F3',
                 weight: 5,
-                latlngs: vm.path,
-                label: {message: "<h3>Route from Vienna to Paris</h3><p>Distance: 1211km</p>"}
+                latlngs: vm.path
             }
         };
         vm.markers = {

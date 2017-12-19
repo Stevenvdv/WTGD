@@ -4,9 +4,11 @@
     angular.module('app').config(configBlock);
 
     /** @ngInject */
-    function configBlock($locationProvider, $logProvider, NotificationProvider) {
+    function configBlock($locationProvider, $logProvider, $httpProvider, NotificationProvider) {
         $locationProvider.html5Mode(false);
         $logProvider.debugEnabled(true);
+
+        $httpProvider.interceptors.push('authInterceptorService');
 
         NotificationProvider.setOptions({
             delay: 5000,

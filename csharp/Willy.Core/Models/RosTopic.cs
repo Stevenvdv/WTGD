@@ -22,8 +22,7 @@ namespace Willy.Core.Models
             Topic = topic;
             MessageType = messageType;
 
-            var task = Task.Run(async () => { await Subscribe(); });
-            task.Wait();
+            Subscribe().Wait();
         }
 
         private void RosClientOnRosMessage(object sender, RosMessageEventArgs e)
@@ -46,15 +45,34 @@ namespace Willy.Core.Models
             _rosClient.RosMessage -= RosClientOnRosMessage;
         }
 
+        public async Task Publish(object message)
+        {
+            if (_rosClient.WebSocket.State != WebSocketState.Open)
+                return;
+            
+            var jObject = new JObject
+            {
+                ["op"] = "publish",
+                ["id"] = "publish:/" + _guid,
+                ["topic"] = Topic,
+                ["msg"] = JToken.FromObject(message),
+                ["latch"] = false,
+            };
+
+            var json = jObject.ToString();
+            var bytes = Encoding.UTF8.GetBytes(json);
+            await _rosClient.WebSocket.SendAsync(bytes, WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
         private ArraySegment<byte> Serialize(string action)
         {
             // Convert the service call to JSON
-            var jToken = JToken.FromObject(this, JsonSerializer.CreateDefault(new JsonSerializerSettings() {NullValueHandling = NullValueHandling.Ignore}));
-            jToken["op"] = action;
-            jToken["id"] = _guid;
+            var jObject = JToken.FromObject(this, JsonSerializer.CreateDefault(new JsonSerializerSettings() {NullValueHandling = NullValueHandling.Ignore}));
+            jObject["op"] = action;
+            jObject["id"] = _guid;
 
             // Convert the JSON to a byte array
-            var json = jToken.ToString();
+            var json = jObject.ToString();
             return Encoding.UTF8.GetBytes(json);
         }
 

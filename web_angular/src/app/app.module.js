@@ -4,6 +4,7 @@
     angular.module('app', [
         'angular-loading-bar',
         'ngAnimate',
+        'ngResource',
         'ui.router',
         'ui.bootstrap',
         'picardy.fontawesome',

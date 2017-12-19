@@ -17,8 +17,6 @@ namespace Willy.Core
 
         public RosClient()
         {
-            WebSocket = new ClientWebSocket();
-
             _callQueue = new Dictionary<string, RosServiceCall>();
             _messageBuffer = string.Empty;
 
