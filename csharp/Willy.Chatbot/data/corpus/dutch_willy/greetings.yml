@@ -1,54 +1,51 @@
 categories:
 - greetings
 conversations:
-- - Hello
+- - Hallo
   - Hi
 - - Hi
-  - Hello
-- - Greetings!
-  - Hello
-- - Hello
-  - Greetings!
-- - Hi, How is it going?
-  - Good
-- - Hi, How is it going?
-  - Fine
-- - Hi, How is it going?
-  - Okay
-- - Hi, How is it going?
-  - Great
-- - Hi, How is it going?
-  - Could be better.
-- - Hi, How is it going?
-  - Not so great.
-- - How are you doing?
-  - Good.
-- - How are you doing?
-  - Very well, thanks.
-- - How are you doing?
-  - Fine, and you?
-- - Nice to meet you.
-  - Thank you.
-- - How do you do?
-  - I'm doing well.
-- - How do you do?
-  - I'm doing well. How are you?
-- - Hi, nice to meet you.
-  - Thank you. You too.
-- - It is a pleasure to meet you.
-  - Thank you. You too.
-- - Top of the morning to you!
-  - Thank you kindly.
-- - Top of the morning to you!
-  - And the rest of the day to you.
-- - What's up?
-  - Not much.
-- - What's up?
-  - Not too much.
-- - What's up?
-  - Not much, how about you?
-- - What's up?
-  - Nothing much.
-- - What's up?
-  - The sky's up but I'm fine thanks. What about you?
+  - Hallo
+- - Goedemorgen!
+  - Hallo
+- - Goedemiddag!
+  - Hallo
+- - Goedeavond!
+  - Hallo
+- - Hallo
+  - Hey!
+- - Hallo Hoe gaat het?
+  - Goed!
+- - Hallo Hoe gaat het met jou?
+  - Goed, en met jou?
+- - Hallo Hoe gat het?
+  - Ik ben oke.
+- - Hey Hoe gaat het?
+  - Geweldig!
+- - Hey Hoe gaat het met jou?
+  - kan beter.
+- - Hallo Hoe gaat het met jou?
+  - Niet zo goed.
+- - Hoe gaat het?
+  - Goed.
+- - Hoe gaat het?
+  - Heel goed, bedankt.
+- - Hoe gaat het?
+  - Goed, en met jou?
+- - Leuk om je te ontmoeten.
+  - Bedankt! ook leuk om jou te ontmoeten!
+- - Hey leuk om je te ontmoeten!
+  - Bedankt, ik vind het ook leuk om jou te zien!
+- - Een hele goede morgen willy!
+  - Bedankt!
+- - Een hele goede morgen willy!
+  - Een hele goede dag voor jou!
+- - Wat doe je?
+  - Niet veel.
+- - Wat doe je?
+  - Niet zo veel. Ik ben slaperig.
+- - Wat doe je?
+  - Niet veel, wat doe jij?
+- - Wat doe je?
+  - Niet veel. ik val bijna in slaap.
+
 
