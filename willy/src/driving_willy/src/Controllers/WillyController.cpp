@@ -104,9 +104,27 @@ void WillyController::GpsCallback(const std_msgs::String::ConstPtr& msg)
 	std::istringstream ss(input);
 	std::string token;
 	int counter = 0;
+	std::string::size_type sz;
+	char* pEnd;
 	while(std::getline(ss, token, ','))
 	{
 		printf("%s\n", (char*)token.c_str());
+		if(counter == 0)
+		{
+			int sat = std::atoi(token.c_str());
+			setSat(sat);
+		}
+		else if(counter == 1)
+		{
+			double lat = strtod (token.c_str(), &pEnd);
+			setLat(lat);
+		}
+		else
+		{
+			double lng = strtod (token.c_str(), &pEnd);
+			setLng(lng);
+			counter = -1;
+		}
 		++counter;
 	}
 	// msg->data.c_str().substr (0,5);
@@ -114,31 +132,31 @@ void WillyController::GpsCallback(const std_msgs::String::ConstPtr& msg)
 
 double WillyController::getLng()
 {
-
+	return lng;
 }
 
 double WillyController::getLat()
 {
-
+	return lat;
 }
 
 int WillyController::getSat()
 {
-
+	return sat;
 }
 
 void WillyController::setLng(double lng)
 {
-
+	this->lng = lng;
 }
 
 void WillyController::setLat(double lat)
 {
-
+	this->lat = lat;
 }
 void WillyController::setSat(int sat)
 {
-
+	this->sat = sat;
 }
 
 //This method receives the ROS NodeHandle and creates a new publisher
