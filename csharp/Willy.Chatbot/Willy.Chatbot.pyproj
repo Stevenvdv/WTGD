@@ -38,9 +38,7 @@
     <Content Include="data\corpus\dutch_willy\botprofile.yml" />
     <Content Include="data\corpus\dutch_willy\conversations.yml" />
     <Content Include="data\corpus\dutch_willy\food.yml" />
-    <Content Include="data\corpus\dutch_willy\gossip.yml" />
     <Content Include="data\corpus\dutch_willy\greetings.yml" />
-    <Content Include="data\corpus\dutch_willy\history.yml" />
     <Content Include="data\corpus\dutch_willy\humor.yml" />
     <Content Include="data\corpus\dutch_willy\science.yml" />
     <Content Include="data\corpus\dutch_willy\environment.yml" />
