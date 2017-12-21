@@ -62,7 +62,7 @@ namespace Willy.Web.Areas.ControlPanel.Models
             {
                 CpuUsage = process.TotalProcessorTime;
             }
-            catch (Win32Exception e)
+            catch (Win32Exception)
             {
                 // ignored, happens on certain system processes
             }

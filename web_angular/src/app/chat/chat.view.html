@@ -1,0 +1,14 @@
+<div class="container">
+    <h4 class="page-header">
+        Chat
+        <small>On this page you can chat with Willy.</small>
+    </h4>
+    <pre ng-bind="vm.chatLines.join('\n')" id="chats"></pre>
+    <form ng-submit="vm.submitChatInput()">
+        <input type="text"
+               class="form-control"
+               title="chat input"
+               ng-model="vm.chatInput"
+               placeholder="Chat input here">
+    </form>
+</div>

@@ -10,8 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Willy.Core;
+using Willy.Core.Services;
 using Willy.Web.Areas.ControlPanel.Hubs;
 using Willy.Web.Areas.ControlPanel.Services;
+using Willy.Web.Areas.Social.Hubs;
 using Willy.Web.Contexts;
 using Willy.Web.Entities;
 
@@ -66,6 +68,7 @@ namespace Willy.Web
             // TODO: Automate
             services.AddTransient<IRosClient, RosClient>();
             services.AddSingleton<IWillyRosService, WillyRosService>();
+            services.AddSingleton<IWillyChatService, WillyChatService>();
             services.AddSingleton<ICommandService, CommandService>();
         }
 
@@ -97,6 +100,7 @@ namespace Willy.Web
                 builder.MapHub<SonarHub>("signalr/controlpanel/sonar");
                 builder.MapHub<CommandHub>("signalr/controlpanel/command");
                 builder.MapHub<RemoteControlHub>("signalr/controlpanel/remoteControl");
+                builder.MapHub<ChatHub>("signalr/social/chat");
             });
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

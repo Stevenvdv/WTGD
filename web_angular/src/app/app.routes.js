@@ -21,6 +21,10 @@
             url: '/commands',
             component: 'commands',
             title: 'Commands'
+        }).state('chat', {
+            url: '/chat',
+            component: 'chat',
+            title: 'Chat'
         }).state('remoteControl', {
             url: '/remote-control',
             component: 'remoteControl',
