@@ -1,4 +1,4 @@
-chats {
+chat {
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
@@ -6,30 +6,8 @@ chats {
     transition: background-color 5000s ease-in-out 0s;
   }
 
-  #chats {
+  #chat {
     height: 400px;
     margin-bottom: 10px;
   }
-
-  .chats-container {
-    width: 100%;
-    height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    .chat-container {
-      margin-bottom: 5px;
-
-      .btn-group {
-        width: 100%;
-      }
-      .btn-primary {
-        width: 80%;
-      }
-      .btn-warning {
-        width: 20%;
-      }
-    }
-  }
-
 }

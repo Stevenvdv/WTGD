@@ -40,6 +40,7 @@
             _authentication.username = '';
             _authentication.tokenContent = '';
 
+            console.log('Logged out');
             // If you're logged out there's nothing else to do but log in again ¯\_(ツ)_/¯
             $state.go('login');
             $rootScope.$broadcast('deauthorized');

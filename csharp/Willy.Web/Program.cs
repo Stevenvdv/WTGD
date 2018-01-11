@@ -17,10 +17,7 @@ namespace Willy.Web
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((builderContext, config) => { config.AddJsonFile("appsettings.json", false, true); })
                 .UseStartup<Startup>()
-                .UseKestrel(options =>
-                {
-                    options.Listen(IPAddress.Any, 80);
-                })
+                .UseKestrel(options => { options.Listen(IPAddress.Any, 80); })
                 .Build();
         }
     }

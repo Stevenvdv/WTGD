@@ -13,7 +13,6 @@ namespace Willy.Web.Areas.ControlPanel.Hubs
         public GpsHub(IWillyRosService willyRosService)
         {
             _willyRosService = willyRosService;
-            _willyRosService.EnableTestData = false;
         }
     }
 }

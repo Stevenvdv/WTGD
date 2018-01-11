@@ -15,30 +15,37 @@ namespace Willy.Web.Areas.ControlPanel.Services
 {
     public class WillyRosService : IWillyRosService
     {
+        private readonly IConfiguration _configuration;
         private readonly IHubContext<GpsHub> _gpsHubContext;
         private readonly IHubContext<SonarHub> _sonarHubContext;
-        private readonly IConfiguration _configuration;
 
         private RosTopic _gpsTopic;
-        private RosTopic _sonarTopic;
         private bool _running;
+        private RosTopic _sonarTopic;
 
         public WillyRosService(IConfiguration configuration, IRosClient rosClient, IHubContext<GpsHub> gpsHubContext, IHubContext<SonarHub> sonarHubContext)
         {
             RosClient = rosClient;
-            
+
             _configuration = configuration;
             _gpsHubContext = gpsHubContext;
             _sonarHubContext = sonarHubContext;
             _running = true;
-
-            RosClient.ConnectAsync(new Uri(_configuration["RosBridgeUri"])).Wait();
 
             // A continuous task keeps the ROS connection in a good state
             Task.Run(ClientStateTask);
         }
 
         public IRosClient RosClient { get; set; }
+
+        public bool EnableTestData { get; set; }
+
+        public void Dispose()
+        {
+            _running = false;
+            _gpsTopic?.Dispose();
+            _sonarTopic?.Dispose();
+        }
 
         private async Task ClientStateTask()
         {
@@ -47,7 +54,7 @@ namespace Willy.Web.Areas.ControlPanel.Services
                 if (EnableTestData)
                     SendTestData();
 
-                if (RosClient.WebSocket.State == WebSocketState.Open)
+                if (RosClient.WebSocket != null && RosClient.WebSocket.State == WebSocketState.Open)
                 {
                     await Task.Delay(1000);
                     continue;
@@ -91,8 +98,6 @@ namespace Willy.Web.Areas.ControlPanel.Services
             await _gpsHubContext.Clients.All.InvokeAsync("gpsUpdate", gpsData);
         }
 
-        public bool EnableTestData { get; set; }
-
         private async void GpsTopicOnRosMessage(object sender, RosMessageEventArgs e)
         {
             if (EnableTestData)
@@ -101,8 +106,8 @@ namespace Willy.Web.Areas.ControlPanel.Services
             // The GPS data is a raw string, parse it into normal data
             var data = e.Json["msg"]["data"].Value<string>();
             var values = data.Split(',');
-            var gpsData = new GpsData(int.Parse(values[0]), 
-                double.Parse(values[1], NumberStyles.Any, CultureInfo.InvariantCulture), 
+            var gpsData = new GpsData(int.Parse(values[0]),
+                double.Parse(values[1], NumberStyles.Any, CultureInfo.InvariantCulture),
                 double.Parse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture));
 
             // Send the GPS data to all clients connected to the GPS hub
@@ -128,13 +133,6 @@ namespace Willy.Web.Areas.ControlPanel.Services
 
             // Send the sonar data to all clients connected to the sonar hub
             await _sonarHubContext.Clients.All.InvokeAsync("sonarUpdate", sonarData);
-        }
-
-        public void Dispose()
-        {
-            _running = false;
-            _gpsTopic?.Dispose();
-            _sonarTopic?.Dispose();
         }
     }
 

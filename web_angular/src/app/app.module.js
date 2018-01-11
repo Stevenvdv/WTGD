@@ -12,7 +12,8 @@
         'ngLodash',
         'ui-notification',
         'nemLogging',
-        'ui-leaflet'
+        'ui-leaflet',
+        'cfp.hotkeys'
     ]);
 
 })();

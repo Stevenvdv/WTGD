@@ -34,15 +34,13 @@ namespace Willy.Web.Migrations
 
             // Create the default commands
             if (!context.Commands.Any())
-            {
                 context.Commands.AddRange(
-                    new Command {Name = "Start up sensors", Description = "Start Willy's sensors", Content = "~/Documents/driving-willy/WTGD/bin/startup.sh"},
-                    new Command {Name = "Shut down sensors", Description = "Shut down Willy's sensors", Content = "~/Documents/driving-willy/WTGD/bin/shutdown.sh"},
+                    new Command {Name = "Start up sensors", Description = "Start Willy's sensors", Content = "~/Documents/WTGD/bin/startup.sh"},
+                    new Command {Name = "Shut down sensors", Description = "Shut down Willy's sensors", Content = "~/Documents/WTGD/bin/shutdown.sh"},
                     new Command {Name = "Restart system", Description = "Restart Willy's on-board computer", Content = "sudo reboot now"},
-                    new Command {Name = "Shut down system", Description = "Shut down Willy's on-board computer", Content = "sudo shutdown now"},
-                    new Command {Name = "Restart webpanel", Description = "Restart the webpanel, this will break the current connection", Content = "sudo service webpanel restart"}
+                    new Command {Name = "Shut down system", Description = "Shut down Willy's on-board computer", Content = "sudo shutdown now"}
+                    // new Command {Name = "Restart webpanel", Description = "Restart the webpanel, this will break the current connection", Content = "sudo service webpanel restart"}
                 );
-            }
 
             await context.SaveChangesAsync();
         }

@@ -10,10 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Willy.Core;
-using Willy.Core.Services;
 using Willy.Web.Areas.ControlPanel.Hubs;
 using Willy.Web.Areas.ControlPanel.Services;
 using Willy.Web.Areas.Social.Hubs;
+using Willy.Web.Areas.Social.Services;
 using Willy.Web.Contexts;
 using Willy.Web.Entities;
 

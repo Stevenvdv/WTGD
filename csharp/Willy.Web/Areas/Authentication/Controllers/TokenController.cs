@@ -56,9 +56,7 @@ namespace Willy.Web.Areas.Authentication.Controllers
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
         }
-
-
     }
 }

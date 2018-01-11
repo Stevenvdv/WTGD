@@ -8,11 +8,11 @@ namespace Willy.Core
 {
     public interface IRosClient
     {
+        ClientWebSocket WebSocket { get; }
         Task ConnectAsync(Uri uri);
         Task<RosServiceResponse> CallServiceAsync(RosServiceCall service);
         Task SetParamValueAsync(string paramName, object param);
         Task<object> GetParamValueAsync(string paramName);
         event EventHandler<RosMessageEventArgs> RosMessage;
-        ClientWebSocket WebSocket { get; }
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Willy.Core.Models;
-using Willy.Core.Services;
+using Willy.Web.Areas.Social.Models;
+using Willy.Web.Areas.Social.Services;
 
 namespace Willy.Web.Areas.Social.Hubs
 {
@@ -22,7 +22,7 @@ namespace Willy.Web.Areas.Social.Hubs
         {
             // Create a bot for the connection
             var chatBot = new WillyChatBot(_willyChatService);
-            _chatBots.Add(Context.ConnectionId, chatBot);
+            _willyChatService.ChatBots.Add(Context.ConnectionId, chatBot);
 
             return base.OnConnectedAsync();
         }
@@ -38,9 +38,9 @@ namespace Willy.Web.Areas.Social.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async void GetResponse(string message)
+        public async Task GetResponse(string message)
         {
-            var response = await _chatBots[Context.ConnectionId].GetResponseAsync(message);
+            var response = await _willyChatService.ChatBots[Context.ConnectionId].GetResponseAsync(message);
             await Clients.Client(Context.ConnectionId).InvokeAsync("response", response);
         }
     }

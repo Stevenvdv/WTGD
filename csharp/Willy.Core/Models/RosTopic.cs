@@ -12,7 +12,7 @@ namespace Willy.Core.Models
     public class RosTopic : IDisposable
     {
         private readonly IRosClient _rosClient;
-        private string _guid;
+        private readonly string _guid;
 
         public RosTopic(IRosClient rosClient, string topic, string messageType)
         {
@@ -23,6 +23,18 @@ namespace Willy.Core.Models
             MessageType = messageType;
 
             Subscribe().Wait();
+        }
+
+        [JsonProperty(PropertyName = "topic")]
+        public string Topic { get; }
+
+        [JsonProperty(PropertyName = "type")]
+        public string MessageType { get; }
+
+        public void Dispose()
+        {
+            var task = Task.Run(async () => { await Unsubscribe(); });
+            task.Wait();
         }
 
         private void RosClientOnRosMessage(object sender, RosMessageEventArgs e)
@@ -49,14 +61,14 @@ namespace Willy.Core.Models
         {
             if (_rosClient.WebSocket.State != WebSocketState.Open)
                 return;
-            
+
             var jObject = new JObject
             {
                 ["op"] = "publish",
                 ["id"] = "publish:/" + _guid,
                 ["topic"] = Topic,
                 ["msg"] = JToken.FromObject(message),
-                ["latch"] = false,
+                ["latch"] = false
             };
 
             var json = jObject.ToString();
@@ -67,25 +79,13 @@ namespace Willy.Core.Models
         private ArraySegment<byte> Serialize(string action)
         {
             // Convert the service call to JSON
-            var jObject = JToken.FromObject(this, JsonSerializer.CreateDefault(new JsonSerializerSettings() {NullValueHandling = NullValueHandling.Ignore}));
+            var jObject = JToken.FromObject(this, JsonSerializer.CreateDefault(new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore}));
             jObject["op"] = action;
             jObject["id"] = _guid;
 
             // Convert the JSON to a byte array
             var json = jObject.ToString();
             return Encoding.UTF8.GetBytes(json);
-        }
-
-        [JsonProperty(PropertyName = "topic")]
-        public string Topic { get; }
-
-        [JsonProperty(PropertyName = "type")]
-        public string MessageType { get; }
-
-        public void Dispose()
-        {
-            var task = Task.Run(async () => { await Unsubscribe(); });
-            task.Wait();
         }
 
         private void OnRosMessage(RosMessageEventArgs e)

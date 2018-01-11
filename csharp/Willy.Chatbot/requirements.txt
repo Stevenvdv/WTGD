@@ -2,9 +2,14 @@ certifi==2017.11.5
 chardet==3.0.4
 ChatterBot==0.8.1
 chatterbot-corpus==1.1.1
+click==6.7
+Flask==0.12.2
 future==0.16.0
 idna==2.6
+itsdangerous==0.24
+Jinja2==2.10
 jsondatabase==0.1.7
+MarkupSafe==1.0
 mathparse==0.1.1
 nltk==3.2.5
 oauthlib==2.0.6
@@ -19,3 +24,5 @@ setuptools==28.8.0
 six==1.11.0
 SQLAlchemy==1.1.15
 urllib3==1.22
+virtualenv==12.1.1
+Werkzeug==0.13
