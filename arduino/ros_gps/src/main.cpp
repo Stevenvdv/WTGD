@@ -1,4 +1,4 @@
-//code for arduino uno r3
+//code for arduino 0 / ROS
 //purpuse : reading gps data and sending it with I2C to the master (connected to pc)
 //made by : Rick Overhorst, credits to owners of the libraries
 //disclaimer if things break and blow up, ain't my problem. respect laws blablabla
@@ -24,6 +24,7 @@ uint16_t sat,lat,lng;
 
 int main(int argc, char const *argv[])
 {
+  //init
   init();
   Wire.begin(0x01);
   Wire.onReceive(receiveEvent);

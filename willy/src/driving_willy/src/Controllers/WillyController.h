@@ -91,8 +91,9 @@ class WillyController
 		int ChecksDriveBackwardElements;
 		SonarCheck ChecksDriveBackward[5];
 	private:
-		//Latitude and longitude
-		float lat, lng;
+		//Latitude and longitude and sat
+		double lat, lng;
+		int sat;
 		//property which contains latest ticks of the encoder on willy.
 		geometry_msgs::Vector3 _ticks;
 

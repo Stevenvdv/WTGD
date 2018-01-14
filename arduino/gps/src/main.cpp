@@ -1,4 +1,4 @@
-//code for arduino uno r3
+//code for arduino 1 / GPS
 //purpuse : reading gps data and sending it with I2C
 //made by : Rick Overhorst, credits to owners of the libraries
 //disclaimer if things break and blow up, ain't my problem. respect laws blablabla
